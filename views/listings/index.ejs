@@ -1,0 +1,53 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4">
+
+    <h3 class="mb-4">Explore Listings</h3>
+
+    <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4">
+
+        <% for(let listing of allListings) { %>
+
+            <div class="col">
+
+                <a href="/listings/<%= listing._id %>" class="listing-link">
+
+                    <div class="listing-card">
+
+                        <!-- Listing Image -->
+                        <div class="listing-image">
+                            <img
+                                src="<%= listing.image.url %>"
+                                alt="<%= listing.title %>"
+                            >
+                        </div>
+
+                        <!-- Listing Information -->
+                        <div class="listing-info">
+
+                            <h5>
+                                <%= listing.title %>
+                            </h5>
+
+                            <p class="listing-location">
+                                <%= listing.location %>, <%= listing.country %>
+                            </p>
+
+                            <p class="listing-price">
+                                ₹<%= listing.price.toLocaleString("en-IN") %>
+                                <span>night</span>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+</div>
