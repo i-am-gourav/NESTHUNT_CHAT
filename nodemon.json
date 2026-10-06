@@ -1,0 +1,13 @@
+{
+  "watch": [
+    "app.js",
+    "controllers",
+    "models",
+    "routes",
+    "views",
+    "public",
+    "init",
+    ".env"
+  ],
+  "ext": "js,mjs,json,ejs,env"
+}
