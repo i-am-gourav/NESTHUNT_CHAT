@@ -60,23 +60,43 @@
                 </div>
             </div>
 
-            <!-- Price -->
-            <div class="mb-3">
-                <label for="price" class="form-label">Price</label>
-                <input
-                    type="number"
-                    name="listing[price]"
-                    id="price"
-                    placeholder="Enter price per night"
-                    class="form-control"
-                    required
-                    min="1"
-                >
-                <div class="valid-feedback">
-                    Looks good!
+            <!-- Price & Category Row -->
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="price" class="form-label">Price</label>
+                    <input
+                        type="number"
+                        name="listing[price]"
+                        id="price"
+                        placeholder="Enter price per night"
+                        class="form-control"
+                        required
+                        min="1"
+                    >
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please enter a valid price.
+                    </div>
                 </div>
-                <div class="invalid-feedback">
-                    Please enter a valid price.
+
+                <div class="mb-3 col-md-6">
+                    <label for="category" class="form-label">Category</label>
+                    <select name="listing[category]" id="category" class="form-select">
+                        <option value="Trending" selected>Trending</option>
+                        <option value="Rooms">Rooms</option>
+                        <option value="Iconic Cities">Iconic Cities</option>
+                        <option value="Mountains">Mountains</option>
+                        <option value="Castles">Castles</option>
+                        <option value="Amazing Pools">Amazing Pools</option>
+                        <option value="Camping">Camping</option>
+                        <option value="Farms">Farms</option>
+                        <option value="Arctic">Arctic</option>
+                        <option value="Domes">Domes</option>
+                        <option value="Boats">Boats</option>
+                        <option value="Beachfront">Beachfront</option>
+                    </select>
                 </div>
             </div>
 

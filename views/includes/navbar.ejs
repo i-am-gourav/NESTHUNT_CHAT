@@ -1,22 +1,48 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+<nav class="navbar navbar-expand-md bg-white border-bottom sticky-top main-navbar">
+  <div class="container-fluid px-md-4">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/listings">
+      <i class="fa-regular fa-compass brand-icon"></i>
+      <span class="fw-bold brand-text">NestHunt</span>
+    </a>
+
+    <!-- Search Bar UI -->
+    <div class="search-bar-container mx-auto my-2 my-md-0">
+      <form class="d-flex search-form" role="search" action="/listings" method="GET">
+        <input 
+          class="form-control search-inp" 
+          type="search" 
+          name="search" 
+          placeholder="Search destinations, titles, cities..." 
+          value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+          aria-label="Search"
+        />
+        <button class="btn btn-search d-flex align-items-center justify-content-center" type="submit">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span class="d-none d-lg-inline ms-1 fw-semibold">Search</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Toggle for mobile -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/listings">All Listings</a>
-        <a class="nav-link" href="/listings/new">Add New Listing</a>
-      </div>
-      <div class="navbar-nav ms-auto">
+
+    <!-- Nav Links -->
+    <div class="collapse navbar-collapse flex-grow-0" id="navbarNavAltMarkup">
+      <div class="navbar-nav align-items-md-center gap-md-2">
+        <a class="nav-link nav-item-link" href="/listings">Explore</a>
+        <a class="nav-link nav-item-link" href="/listings/new">Airbnb your home</a>
         <% if (!currentUser) { %>
-          <a class="nav-link" href="/signup"><b>Signup</b></a>
-          <a class="nav-link" href="/login"><b>Login</b></a>
+          <a class="nav-link nav-item-link fw-semibold" href="/signup">Sign up</a>
+          <a class="nav-link nav-item-link fw-semibold" href="/login">Log in</a>
         <% } else { %>
-          <span class="nav-link text-muted"><i class="fa-regular fa-user me-1"></i><%= currentUser.username %></span>
-          <a class="nav-link" href="/logout">Logout</a>
+          <a class="nav-link nav-item-link" href="/cart">
+            <i class="fa-solid fa-cart-shopping me-1 text-danger"></i>Cart
+          </a>
+          <span class="nav-link text-muted"><i class="fa-regular fa-circle-user me-1"></i><%= currentUser.username %></span>
+          <a class="nav-link nav-item-link" href="/logout">Log out</a>
         <% } %>
       </div>
     </div>

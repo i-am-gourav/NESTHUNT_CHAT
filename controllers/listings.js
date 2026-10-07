@@ -9,8 +9,48 @@ const getGeocoder = () => {
 };
 
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs", { allListings });
+    const { category, search } = req.query;
+    let queryConditions = [];
+
+    if (category && category.trim() !== "") {
+        const catRegex = new RegExp(category.trim(), "i");
+        queryConditions.push({
+            $or: [
+                { category: catRegex },
+                { title: catRegex },
+                { description: catRegex },
+                { location: catRegex },
+                { country: catRegex }
+            ]
+        });
+    }
+
+    if (search && search.trim() !== "") {
+        const searchRegex = new RegExp(search.trim(), "i");
+        queryConditions.push({
+            $or: [
+                { title: searchRegex },
+                { location: searchRegex },
+                { country: searchRegex },
+                { description: searchRegex },
+                { category: searchRegex }
+            ]
+        });
+    }
+
+    let filter = {};
+    if (queryConditions.length === 1) {
+        filter = queryConditions[0];
+    } else if (queryConditions.length > 1) {
+        filter = { $and: queryConditions };
+    }
+
+    const allListings = await Listing.find(filter);
+    res.render("listings/index.ejs", { 
+        allListings, 
+        currentCategory: category || "", 
+        searchQuery: search || "" 
+    });
 };
 
 module.exports.renderNewForm = (req, res) => {

@@ -7,6 +7,7 @@ const listingSchema = Joi.object({
         location: Joi.string().required(),
         country: Joi.string().required(),
         price: Joi.number().required().min(0),
+        category: Joi.string().allow("", null),
         image: Joi.object({
             filename: Joi.string(),
             url: Joi.string()
@@ -26,7 +27,16 @@ const reviewSchema = Joi.object({
     }).required()
 });
 
+const bookingSchema = Joi.object({
+    booking: Joi.object({
+        listingId: Joi.string().required(),
+        checkIn: Joi.string().required(),
+        checkOut: Joi.string().required()
+    }).required()
+});
+
 module.exports = {
     listingSchema,
-    reviewSchema
+    reviewSchema,
+    bookingSchema
 };

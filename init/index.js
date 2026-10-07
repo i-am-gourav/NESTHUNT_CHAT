@@ -31,14 +31,36 @@ const initDB = async () => {
         await demoUser.save();
     }
 
-    const listingsWithOwner = data.data.map((obj) => ({
-        ...obj,
-        owner: demoUser._id,
-        geometry: obj.geometry || {
-            type: "Point",
-            coordinates: [77.2090, 28.6139]
-        }
-    }));
+    const categoriesList = [
+        "Trending", "Rooms", "Iconic Cities", "Mountains",
+        "Castles", "Amazing Pools", "Camping", "Farms",
+        "Arctic", "Domes", "Boats", "Beachfront"
+    ];
+
+    const listingsWithOwner = data.data.map((obj, index) => {
+        let matchedCat = "Trending";
+        const t = (obj.title + " " + obj.description).toLowerCase();
+        if (t.includes("beach") || t.includes("ocean") || t.includes("sea")) matchedCat = "Beachfront";
+        else if (t.includes("mountain") || t.includes("cabin") || t.includes("ski")) matchedCat = "Mountains";
+        else if (t.includes("city") || t.includes("downtown") || t.includes("loft")) matchedCat = "Iconic Cities";
+        else if (t.includes("pool") || t.includes("villa")) matchedCat = "Amazing Pools";
+        else if (t.includes("castle") || t.includes("historic")) matchedCat = "Castles";
+        else if (t.includes("camp") || t.includes("tent") || t.includes("treehouse")) matchedCat = "Camping";
+        else if (t.includes("farm") || t.includes("ranch")) matchedCat = "Farms";
+        else if (t.includes("arctic") || t.includes("snow") || t.includes("lake")) matchedCat = "Arctic";
+        else if (t.includes("boat") || t.includes("ship")) matchedCat = "Boats";
+        else matchedCat = categoriesList[index % categoriesList.length];
+
+        return {
+            ...obj,
+            owner: demoUser._id,
+            category: obj.category || matchedCat,
+            geometry: obj.geometry || {
+                type: "Point",
+                coordinates: [77.2090, 28.6139]
+            }
+        };
+    });
 
     await Listing.insertMany(listingsWithOwner);
     console.log("data was initialized with owner");
