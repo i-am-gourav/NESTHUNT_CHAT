@@ -15,6 +15,7 @@ const { attachCurrentUser } = require("./middleware.js");
 const listingRouter = require("./routes/listings.js");
 const reviewRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/users.js");
+const cartRouter = require("./routes/cart.js");
 
 const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/NESTHUNT";
 
@@ -37,6 +38,7 @@ app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 
 // Core Middleware
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(cookieParser());
@@ -64,6 +66,7 @@ app.get("/", (req, res) => {
 app.use("/", userRouter);
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
+app.use("/cart", cartRouter);
 
 // ==========================================
 // ERROR HANDLING

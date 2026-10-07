@@ -1,0 +1,311 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="cart-container mt-4 mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="fw-bold m-0 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-bag-shopping text-danger"></i>
+            <span>Your Booking Cart</span>
+        </h2>
+        <% if (cartItems && cartItems.length > 0) { %>
+            <span class="badge bg-dark rounded-pill fs-6 px-3 py-2">
+                <%= cartItems.length %> <%= cartItems.length === 1 ? 'Item' : 'Items' %>
+            </span>
+        <% } %>
+    </div>
+
+    <!-- Alert Notifications -->
+    <% if (successMessage) { %>
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> <%= successMessage %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
+    <% if (errorMessage) { %>
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> <%= errorMessage %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
+    <% if (!cartItems || cartItems.length === 0) { %>
+        <!-- Empty Cart State -->
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center my-5 bg-light">
+            <div class="empty-cart-icon mb-3">
+                <i class="fa-solid fa-suitcase-rolling fa-4x text-muted opacity-50"></i>
+            </div>
+            <h3 class="fw-bold mb-2">Your cart is currently empty</h3>
+            <p class="text-muted mb-4">You haven't reserved any stays yet. Discover amazing destinations and add them to your cart.</p>
+            <div>
+                <a href="/listings" class="btn btn-danger px-4 py-2 rounded-pill fw-semibold shadow-sm">
+                    <i class="fa-solid fa-compass me-2"></i>Explore Properties
+                </a>
+            </div>
+        </div>
+    <% } else { %>
+        <!-- Populated Cart State -->
+        <div class="row g-4">
+            <!-- Left: Cart Items List -->
+            <div class="col-lg-8">
+                <div class="d-flex flex-column gap-3">
+                    <% for(let item of cartItems) { %>
+                        <div class="card cart-item-card border-0 shadow-sm rounded-4 overflow-hidden" id="cart-item-<%= item._id %>">
+                            <div class="row g-0">
+                                <!-- Property Thumbnail -->
+                                <div class="col-md-4 col-sm-5 position-relative">
+                                    <img 
+                                        src="<%= item.listing && item.listing.image ? item.listing.image.url : '/images/placeholder.jpg' %>" 
+                                        class="img-fluid h-100 w-100 object-fit-cover cart-item-img" 
+                                        alt="<%= item.listing ? item.listing.title : 'Listing' %>"
+                                    />
+                                    <span class="badge bg-dark bg-opacity-75 position-absolute top-0 start-0 m-2 px-2 py-1 rounded-3">
+                                        ₹<%= item.pricePerDay.toLocaleString("en-IN") %> / night
+                                    </span>
+                                </div>
+
+                                <!-- Booking Details -->
+                                <div class="col-md-8 col-sm-7 p-3 p-md-4 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="fw-bold mb-1 text-truncate pe-2">
+                                                <a href="/listings/<%= item.listing ? item.listing._id : '' %>" class="text-decoration-none text-dark hover-underline">
+                                                    <%= item.listing ? item.listing.title : 'Property Listing' %>
+                                                </a>
+                                            </h5>
+                                        </div>
+
+                                        <p class="text-muted small mb-3">
+                                            <i class="fa-solid fa-location-dot text-danger me-1"></i>
+                                            <%= item.listing ? item.listing.location : '' %>, <%= item.listing ? item.listing.country : '' %>
+                                        </p>
+
+                                        <!-- Dates & Duration Info -->
+                                        <div class="p-3 bg-light rounded-3 mb-3">
+                                            <div class="row text-center text-sm-start g-2">
+                                                <div class="col-6 col-sm-4">
+                                                    <span class="text-muted small d-block">Check-in</span>
+                                                    <strong class="text-dark small">
+                                                        <%= new Date(item.checkIn).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) %>
+                                                    </strong>
+                                                </div>
+                                                <div class="col-6 col-sm-4">
+                                                    <span class="text-muted small d-block">Check-out</span>
+                                                    <strong class="text-dark small">
+                                                        <%= new Date(item.checkOut).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) %>
+                                                    </strong>
+                                                </div>
+                                                <div class="col-12 col-sm-4 text-sm-end mt-2 mt-sm-0">
+                                                    <span class="text-muted small d-block">Duration</span>
+                                                    <span class="badge bg-secondary rounded-pill">
+                                                        <%= item.numberOfDays %> <%= item.numberOfDays === 1 ? 'night' : 'nights' %>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Price calculation and action buttons -->
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                            <div>
+                                                <span class="text-muted small">Total: </span>
+                                                <span class="fs-5 fw-bold text-dark">₹<%= item.totalAmount.toLocaleString("en-IN") %></span>
+                                            </div>
+
+                                            <div class="d-flex gap-2">
+                                                <!-- Toggle Edit Dates Collapse -->
+                                                <button 
+                                                    class="btn btn-sm btn-outline-secondary rounded-pill px-3" 
+                                                    type="button" 
+                                                    data-bs-toggle="collapse" 
+                                                    data-bs-target="#edit-dates-<%= item._id %>" 
+                                                    aria-expanded="false"
+                                                >
+                                                    <i class="fa-regular fa-calendar-days me-1"></i>Edit Dates
+                                                </button>
+
+                                                <!-- Remove item form -->
+                                                <form method="POST" action="/cart/<%= item._id %>?_method=DELETE" onsubmit="return confirm('Remove this stay from your cart?');">
+                                                    <button class="btn btn-sm btn-outline-danger rounded-pill px-3" type="submit" title="Remove from cart">
+                                                        <i class="fa-regular fa-trash-can me-1"></i>Remove
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <!-- Collapsible Edit Dates Form -->
+                                        <div class="collapse mt-3" id="edit-dates-<%= item._id %>">
+                                            <div class="p-3 border rounded-3 bg-white shadow-sm">
+                                                <h6 class="fw-bold mb-3 small text-uppercase tracking-wide text-muted">
+                                                    <i class="fa-solid fa-pen-to-square me-1"></i>Modify Booking Dates
+                                                </h6>
+                                                
+                                                <form 
+                                                    method="POST" 
+                                                    action="/cart/<%= item._id %>?_method=PUT" 
+                                                    class="cart-date-edit-form"
+                                                    data-item-id="<%= item._id %>"
+                                                    data-price="<%= item.pricePerDay %>"
+                                                >
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-sm-6">
+                                                            <label class="form-label small fw-semibold">Check-in Date</label>
+                                                            <input 
+                                                                type="date" 
+                                                                name="booking[checkIn]" 
+                                                                class="form-control form-control-sm edit-checkin-inp" 
+                                                                required
+                                                                min="<%= new Date().toISOString().split('T')[0] %>"
+                                                                value="<%= new Date(item.checkIn).toISOString().split('T')[0] %>"
+                                                            />
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label class="form-label small fw-semibold">Check-out Date</label>
+                                                            <input 
+                                                                type="date" 
+                                                                name="booking[checkOut]" 
+                                                                class="form-control form-control-sm edit-checkout-inp" 
+                                                                required
+                                                                value="<%= new Date(item.checkOut).toISOString().split('T')[0] %>"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="d-flex justify-content-between align-items-center mb-3 p-2 bg-light rounded small">
+                                                        <span class="edit-nights-display text-muted">
+                                                            <strong><%= item.numberOfDays %></strong> <%= item.numberOfDays === 1 ? 'night' : 'nights' %>
+                                                        </span>
+                                                        <span class="edit-total-display fw-bold text-dark">
+                                                            New Total: ₹<%= item.totalAmount.toLocaleString("en-IN") %>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                        <button 
+                                                            type="button" 
+                                                            class="btn btn-sm btn-light border rounded-pill px-3" 
+                                                            data-bs-toggle="collapse" 
+                                                            data-bs-target="#edit-dates-<%= item._id %>"
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                        <button type="submit" class="btn btn-sm btn-dark rounded-pill px-3 edit-submit-btn">
+                                                            Update Dates
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Right: Cart Summary / Checkout Card -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top cart-summary-card" style="top: 6.5rem;">
+                    <h5 class="fw-bold mb-3 pb-2 border-bottom">Cart Summary</h5>
+
+                    <div class="d-flex flex-column gap-2 mb-3">
+                        <% for(let item of cartItems) { %>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span class="text-truncate me-2" style="max-width: 180px;">
+                                    <%= item.listing ? item.listing.title : 'Stay' %> (<%= item.numberOfDays %>n)
+                                </span>
+                                <span class="fw-semibold text-dark">₹<%= item.totalAmount.toLocaleString("en-IN") %></span>
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <hr class="my-2" />
+
+                    <div class="d-flex justify-content-between align-items-center mb-4 pt-2">
+                        <span class="fw-bold fs-5">Total Amount</span>
+                        <span class="fw-bold fs-4 text-danger">₹<%= cartTotal.toLocaleString("en-IN") %></span>
+                    </div>
+
+                    <div class="alert alert-light border rounded-3 small text-muted mb-3 d-flex align-items-start gap-2">
+                        <i class="fa-solid fa-shield-halved text-success mt-1"></i>
+                        <div>
+                            <strong>No payment required yet.</strong> Your cart is saved securely and ready for checkout.
+                        </div>
+                    </div>
+
+                    <button class="btn btn-danger w-100 py-2 rounded-pill fw-semibold mb-2 shadow-sm" disabled title="Payment gateway integration coming soon">
+                        <i class="fa-solid fa-lock me-2"></i>Proceed to Checkout
+                    </button>
+                    <div class="text-center">
+                        <small class="text-muted d-block mb-3">Payment processing will be enabled in the next step</small>
+                        <a href="/listings" class="text-decoration-none small text-dark fw-semibold">
+                            <i class="fa-solid fa-arrow-left me-1"></i>Continue Exploring Stays
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<script>
+    // Real-time calculation handler for date edits in the Cart
+    document.addEventListener("DOMContentLoaded", () => {
+        const editForms = document.querySelectorAll(".cart-date-edit-form");
+
+        editForms.forEach(form => {
+            const checkInInput = form.querySelector(".edit-checkin-inp");
+            const checkOutInput = form.querySelector(".edit-checkout-inp");
+            const nightsDisplay = form.querySelector(".edit-nights-display");
+            const totalDisplay = form.querySelector(".edit-total-display");
+            const submitBtn = form.querySelector(".edit-submit-btn");
+            const pricePerNight = parseFloat(form.dataset.price) || 0;
+
+            const updateCalculation = () => {
+                const checkInVal = checkInInput.value;
+                const checkOutVal = checkOutInput.value;
+
+                if (!checkInVal || !checkOutVal) {
+                    nightsDisplay.innerHTML = `<span class="text-warning">Select both dates</span>`;
+                    totalDisplay.innerText = "New Total: --";
+                    submitBtn.disabled = true;
+                    return;
+                }
+
+                const checkInDate = new Date(checkInVal);
+                const checkOutDate = new Date(checkOutVal);
+
+                // Set checkOut min to checkIn date
+                checkOutInput.min = checkInVal;
+
+                const diffTime = checkOutDate.getTime() - checkInDate.getTime();
+                const days = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+                if (days >= 1) {
+                    const total = days * pricePerNight;
+                    nightsDisplay.innerHTML = `<strong>${days}</strong> ${days === 1 ? 'night' : 'nights'} (₹${pricePerNight.toLocaleString('en-IN')}/night)`;
+                    totalDisplay.innerText = `New Total: ₹${total.toLocaleString('en-IN')}`;
+                    submitBtn.disabled = false;
+                } else {
+                    nightsDisplay.innerHTML = `<span class="text-danger small">Check-out must be after check-in</span>`;
+                    totalDisplay.innerText = "New Total: --";
+                    submitBtn.disabled = true;
+                }
+            };
+
+            checkInInput.addEventListener("change", () => {
+                if (checkInInput.value && (!checkOutInput.value || checkOutInput.value <= checkInInput.value)) {
+                    const nextDay = new Date(checkInInput.value);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    checkOutInput.value = nextDay.toISOString().split("T")[0];
+                }
+                updateCalculation();
+            });
+
+            checkOutInput.addEventListener("change", updateCalculation);
+            checkInInput.addEventListener("input", updateCalculation);
+            checkOutInput.addEventListener("input", updateCalculation);
+        });
+    });
+</script>

@@ -79,26 +79,38 @@
                 >
             </div>
 
-            <!-- Price -->
-            <div class="mb-3">
-                <label for="price" class="form-label">Price</label>
+            <!-- Price & Category Row -->
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="price" class="form-label">Price</label>
 
-                <input
-                    type="number"
-                    name="listing[price]"
-                    id="price"
-                    value="<%= listing.price %>"
-                    class="form-control"
-                    required
-                    min="1"
-                >
+                    <input
+                        type="number"
+                        name="listing[price]"
+                        id="price"
+                        value="<%= listing.price %>"
+                        class="form-control"
+                        required
+                        min="1"
+                    >
 
-                <div class="valid-feedback">
-                    Looks good!
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+
+                    <div class="invalid-feedback">
+                        Please enter a valid price.
+                    </div>
                 </div>
 
-                <div class="invalid-feedback">
-                    Please enter a valid price.
+                <div class="mb-3 col-md-6">
+                    <label for="category" class="form-label">Category</label>
+                    <select name="listing[category]" id="category" class="form-select">
+                        <% const categories = ["Trending", "Rooms", "Iconic Cities", "Mountains", "Castles", "Amazing Pools", "Camping", "Farms", "Arctic", "Domes", "Boats", "Beachfront"]; %>
+                        <% for (let cat of categories) { %>
+                            <option value="<%= cat %>" <%= listing.category === cat ? 'selected' : '' %>><%= cat %></option>
+                        <% } %>
+                    </select>
                 </div>
             </div>
 

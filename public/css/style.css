@@ -1,189 +1,292 @@
-.navbar{
-    height:5 rem;
-    background-color: white;
+/* ============================================================
+   NestHunt Global Styles & Design System
+   ============================================================ */
+
+:root {
+    --primary-color: #ff385c;
+    --primary-hover: #e00b41;
+    --text-main: #222222;
+    --text-muted: #717171;
+    --border-light: #ebebeb;
+    --bg-light: #f7f7f7;
+    --card-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
-.fa-compass{
-    color:#fe424d;
-    font-size:2 rem;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-.nav-link{
-    color:#222222 !important;
+.container-fluid {
+    max-width: 1720px;
 }
 
+/* ============================================================
+   Navbar & Header
+   ============================================================ */
 
-footer {
-    margin-top: 50px;
-    background-color: #f7f7f7;
-    border-top: 1px solid #dddddd;
+.main-navbar {
+    height: 5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    background: #ffffff !important;
+    z-index: 1030;
 }
 
-.f-info {
-    min-height: 120px;
+.brand-icon {
+    color: var(--primary-color);
+    font-size: 2rem;
+}
+
+.brand-text {
+    font-size: 1.35rem;
+    color: var(--primary-color);
+    letter-spacing: -0.5px;
+}
+
+.navbar-nav .nav-item-link {
+    color: var(--text-main) !important;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 20px;
+    transition: background-color 0.2s ease;
+}
+
+.navbar-nav .nav-item-link:hover {
+    background-color: var(--bg-light);
+}
+
+/* Navbar Search Bar */
+.search-bar-container {
+    max-width: 480px;
+    width: 100%;
+}
+
+.search-form {
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 40px;
+    padding: 5px 6px 5px 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.search-form:hover,
+.search-form:focus-within {
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+    border-color: #dcdcdc;
+}
+
+.search-inp {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    font-size: 0.9rem;
+    padding: 0.35rem 0.5rem;
+    font-weight: 500;
+}
+
+.search-inp::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.btn-search {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    border-radius: 30px !important;
+    padding: 0.45rem 1rem !important;
+    border: none !important;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-search:hover {
+    background-color: var(--primary-hover) !important;
+    transform: scale(1.02);
+}
+
+/* ============================================================
+   Home Page: Category Filters & Tax Switch
+   ============================================================ */
+
+#filters-container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.75rem 0;
+    position: sticky;
+    top: 5rem;
+    background: #ffffff;
+    z-index: 1020;
+}
+
+#filters {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    padding: 0.5rem 0.25rem;
+    flex-grow: 1;
+}
+
+#filters::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.filter {
+    display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 25px 20px;
-    text-align: center;
-}
-
-/* Social Icons */
-
-.f-info-socials {
-    display: flex;
-    gap: 18px;
-    font-size: 20px;
-}
-
-.f-info-socials i {
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    opacity: 0.68;
+    transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 6px;
+    min-width: fit-content;
     cursor: pointer;
-    color: #222222;
-    transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.f-info-socials i:hover {
-    transform: scale(1.1);
-    color: #ff385c;
+.filter i {
+    font-size: 1.35rem;
+    margin-bottom: 0.35rem;
 }
 
-/* Copyright */
-
-.f-info-brand {
-    color: #222222;
-    font-size: 14px;
+.filter p {
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin: 0;
+    white-space: nowrap;
 }
 
-/* Footer Links */
-
-.f-info-links {
-    display: flex;
-    gap: 15px;
+.filter:hover {
+    opacity: 1;
+    color: #000000;
+    border-bottom: 2px solid #b0b0b0;
 }
 
-.f-info-links a {
-    text-decoration: none;
-    color: #222222;
-    font-size: 14px;
+.filter.active-filter {
+    opacity: 1;
+    color: #000000;
+    font-weight: 600;
+    border-bottom: 2px solid var(--text-main);
 }
 
-.f-info-links a:hover {
-    text-decoration: underline;
+/* Tax Toggle Switch Box */
+.tax-toggle {
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0.7rem 1rem;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    min-width: fit-content;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* =========================
-   Listings Index Page
-   ========================= */
+.tax-toggle:hover {
+    border-color: #c0c0c0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.tax-switch-input {
+    cursor: pointer;
+    width: 2.2rem !important;
+    height: 1.25rem !important;
+}
+
+.tax-switch-input:checked {
+    background-color: var(--text-main) !important;
+    border-color: var(--text-main) !important;
+}
+
+.tax-switch-label {
+    font-size: 0.85rem;
+    cursor: pointer;
+    user-select: none;
+    color: var(--text-main);
+}
+
+.tax-info {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-style: normal;
+}
+
+/* ============================================================
+   Listing Cards
+   ============================================================ */
 
 .listing-link {
     text-decoration: none;
-    color: #222222;
+    color: inherit;
+    display: block;
 }
 
 .listing-card {
-    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: transform 0.2s ease;
 }
-
-/* Listing Image */
 
 .listing-image {
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 20 / 19;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: 14px;
+    position: relative;
+    background-color: #f0f0f0;
 }
 
 .listing-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
 }
 
 .listing-card:hover .listing-image img {
-    transform: scale(1.05);
+    transform: scale(1.04);
 }
-
-/* Listing Information */
 
 .listing-info {
     padding-top: 10px;
 }
 
-.listing-info h5 {
-    font-size: 16px;
+.listing-title {
+    font-size: 0.95rem;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    color: var(--text-main);
 }
 
 .listing-location {
-    font-size: 14px;
-    color: #717171;
-    margin-bottom: 6px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
 }
 
 .listing-price {
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 0.95rem;
     margin: 0;
+    font-weight: 600;
+    color: var(--text-main);
 }
 
-.listing-price span {
+.listing-price .price-unit {
     font-weight: 400;
+    color: var(--text-muted);
 }
 
-
-/* =========================
-   New Listing Page
-   ========================= */
-
-.new-listing-heading {
-    margin-top: 30px;
-    margin-bottom: 25px;
-    font-size: 28px;
-    font-weight: 600;
-}
-
-/* Form */
-
-form {
-    margin-bottom: 50px;
-}
-
-.form-label {
-    font-weight: 500;
-    margin-bottom: 7px;
-}
-
-.form-control {
-    border: 1px solid #b0b0b0;
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 15px;
-}
-
-.form-control:focus {
-    border-color: #222222;
-    box-shadow: none;
-}
-
-/* Add Listing Button */
-
-.add-btn {
-    width: 100%;
-    margin-top: 10px;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-
-/* =========================
-   New / Edit Listing Page
-   ========================= */
+/* ============================================================
+   Forms (New / Edit Listing, Auth)
+   ============================================================ */
 
 .new-listing-heading {
     margin-top: 30px;
@@ -201,14 +304,16 @@ form {
     margin-bottom: 7px;
 }
 
-.form-control {
+.form-control,
+.form-select {
     border: 1px solid #b0b0b0;
     border-radius: 8px;
     padding: 10px 12px;
     font-size: 15px;
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
     border-color: #222222;
     box-shadow: none;
 }
@@ -222,11 +327,9 @@ form {
     font-weight: 600;
 }
 
-
-
-/* =========================
+/* ============================================================
    Show Listing Page
-   ========================= */
+   ============================================================ */
 
 .show-heading {
     margin-top: 20px;
@@ -234,8 +337,6 @@ form {
     font-size: 28px;
     font-weight: 600;
 }
-
-/* Image */
 
 .show-image-container {
     width: 100%;
@@ -249,8 +350,6 @@ form {
     height: 100%;
     object-fit: cover;
 }
-
-/* Details */
 
 .show-details {
     padding: 20px 5px;
@@ -279,8 +378,6 @@ form {
     color: #444444;
 }
 
-/* Buttons */
-
 .show-actions {
     display: flex;
     gap: 12px;
@@ -296,14 +393,14 @@ form {
     border-radius: 8px;
 }
 
-/* =========================
-   Map Styling
-   ========================= */
+/* ============================================================
+   Mapbox Styling
+   ============================================================ */
 
 #map {
     height: 400px;
     width: 100%;
-    border-radius: 12px;
+    border-radius: 14px;
     border: 1px solid #e0e0e0;
 }
 
@@ -317,8 +414,143 @@ form {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
+/* ============================================================
+   Footer
+   ============================================================ */
+
+footer {
+    margin-top: auto;
+    background-color: #f7f7f7;
+    border-top: 1px solid #dddddd;
+}
+
+.f-info {
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 20px;
+    text-align: center;
+}
+
+.f-info-socials {
+    display: flex;
+    gap: 18px;
+    font-size: 18px;
+}
+
+.f-info-socials i {
+    cursor: pointer;
+    color: #222222;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.f-info-socials i:hover {
+    transform: scale(1.1);
+    color: var(--primary-color);
+}
+
+.f-info-brand {
+    color: #222222;
+    font-size: 14px;
+}
+
+.f-info-links {
+    display: flex;
+    gap: 15px;
+}
+
+.f-info-links a {
+    text-decoration: none;
+    color: #222222;
+    font-size: 14px;
+}
+
+.f-info-links a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================================
+   Responsive Breakpoints
+   ============================================================ */
+
+@media (max-width: 992px) {
+    #filters-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .tax-toggle {
+        align-self: flex-start;
+        width: 100%;
+        margin-left: 0 !important;
+    }
+}
+
 @media (max-width: 768px) {
+    .main-navbar {
+        height: auto;
+        padding: 0.75rem 0;
+    }
+
+    .search-bar-container {
+        max-width: 100%;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
     #map {
         height: 300px;
+    }
+}
+
+/* ============================================================
+   Cart & Booking System Styles
+   ============================================================ */
+
+.booking-card {
+    border: 1px solid var(--border-light) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    background: #ffffff;
+    border-radius: 18px !important;
+}
+
+.cart-container {
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+.cart-item-card {
+    border: 1px solid var(--border-light) !important;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    background: #ffffff;
+}
+
+.cart-item-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09) !important;
+}
+
+.cart-item-img {
+    min-height: 180px;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cart-summary-card {
+    border: 1px solid var(--border-light) !important;
+    background: #ffffff;
+}
+
+.hover-underline:hover {
+    text-decoration: underline !important;
+}
+
+@media (max-width: 576px) {
+    .cart-item-img {
+        max-height: 200px;
+        border-radius: 14px 14px 0 0;
     }
 }
