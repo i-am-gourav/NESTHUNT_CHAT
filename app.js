@@ -18,23 +18,12 @@ const userRouter = require("./routes/users.js");
 const cartRouter = require("./routes/cart.js");
 const chatRouter = require("./routes/chat.js");
 
-const dbUrl = process.env.ATLASDB_URL;
-const localDbUrl = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/NESTHUNT";
+const dbUrl = process.env.ATLASDB_URL || process.env.MONGO_URL || "mongodb://127.0.0.1:27017/NESTHUNT";
 
-// Connect to MongoDB with graceful fallback to local database
+// Connect to MongoDB
 async function main() {
-    if (dbUrl) {
-        try {
-            await mongoose.connect(dbUrl, { serverSelectionTimeoutMS: 4000 });
-            console.log("Connected to MongoDB Atlas");
-            return;
-        } catch (atlasErr) {
-            console.warn("MongoDB Atlas connection failed. Falling back to local DB:", atlasErr.message);
-        }
-    }
-
-    await mongoose.connect(localDbUrl);
-    console.log("Connected to Local MongoDB");
+    await mongoose.connect(dbUrl);
+    console.log(`Connected to MongoDB (${process.env.ATLASDB_URL ? "Atlas" : "Local"})`);
 }
 
 main().catch((err) => {
