@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: nesthunt
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
