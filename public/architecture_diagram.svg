@@ -1,0 +1,271 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 950" width="100%" height="100%" style="background-color: #0d1117; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="100%" stop-color="#111827" />
+    </linearGradient>
+    <linearGradient id="clientGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+    <linearGradient id="serverGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="100%" stop-color="#312e81" />
+    </linearGradient>
+    <linearGradient id="dbGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#064e3b" />
+      <stop offset="100%" stop-color="#065f46" />
+    </linearGradient>
+    <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4c1d95" />
+      <stop offset="100%" stop-color="#581c87" />
+    </linearGradient>
+    <linearGradient id="redAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff385c" />
+      <stop offset="100%" stop-color="#e00b41" />
+    </linearGradient>
+
+    <!-- Filters for Glow & Shadows -->
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+
+    <!-- Arrow Marker -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#ff385c" />
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#10b981" />
+    </marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#a855f7" />
+    </marker>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1600" height="950" fill="url(#bgGrad)" />
+
+  <!-- Title & Subtitle -->
+  <text x="60" y="65" fill="#ffffff" font-size="28" font-weight="800" letter-spacing="-0.5">🏠 NestHunt — High-Level System Architecture</text>
+  <text x="60" y="95" fill="#94a3b8" font-size="14">Full-Stack Vacation Rental &amp; AI Discovery Platform (Node.js &#8226; Express MVC &#8226; MongoDB Atlas &#8226; RAG Vector Search &#8226; Cloudinary &#8226; Mapbox)</text>
+  <rect x="60" y="115" width="1480" height="1" fill="#334155" opacity="0.6" />
+
+  <!-- ============================================================ -->
+  <!-- 1. PRESENTATION LAYER (TOP ROW) -->
+  <!-- ============================================================ -->
+  <g transform="translate(60, 140)">
+    <rect width="1480" height="160" rx="16" fill="#1e293b" fill-opacity="0.6" stroke="#475569" stroke-width="1.5" filter="url(#cardShadow)" />
+    <!-- Header Badge -->
+    <rect x="24" y="18" width="230" height="28" rx="6" fill="#0284c7" fill-opacity="0.2" stroke="#38bdf8" stroke-width="1" />
+    <text x="36" y="37" fill="#38bdf8" font-size="12" font-weight="700">1. CLIENT &amp; PRESENTATION LAYER</text>
+
+    <!-- Sub-Cards -->
+    <!-- Card 1: UI Engine -->
+    <g transform="translate(24, 60)">
+      <rect width="320" height="75" rx="10" fill="#0f172a" stroke="#334155" />
+      <text x="20" y="32" fill="#f8fafc" font-size="15" font-weight="700">EJS + ejs-mate + Bootstrap 5</text>
+      <text x="20" y="52" fill="#94a3b8" font-size="12">Server-Side Rendered (SSR) Templates</text>
+      <text x="20" y="68" fill="#64748b" font-size="11">Fast Initial Load &#8226; SEO Optimized</text>
+    </g>
+
+    <!-- Card 2: Interactive Maps -->
+    <g transform="translate(370, 60)">
+      <rect width="320" height="75" rx="10" fill="#0f172a" stroke="#334155" />
+      <text x="20" y="32" fill="#f8fafc" font-size="15" font-weight="700">Mapbox GL JS</text>
+      <text x="20" y="52" fill="#94a3b8" font-size="12">Client-Side Spatial Vector Maps</text>
+      <text x="20" y="68" fill="#64748b" font-size="11">Custom Pins &#8226; Popups &#8226; Coordinates</text>
+    </g>
+
+    <!-- Card 3: Tax Switch -->
+    <g transform="translate(715, 60)">
+      <rect width="340" height="75" rx="10" fill="#0f172a" stroke="#334155" />
+      <text x="20" y="32" fill="#f8fafc" font-size="15" font-weight="700">Tax Toggle (+18% GST)</text>
+      <text x="20" y="52" fill="#94a3b8" font-size="12">Dynamic Client Calculation</text>
+      <text x="20" y="68" fill="#64748b" font-size="11">State Persisted via localStorage</text>
+    </g>
+
+    <!-- Card 4: AI Concierge Widget -->
+    <g transform="translate(1080, 60)">
+      <rect width="375" height="75" rx="10" fill="#0f172a" stroke="#ff385c" stroke-width="1.2" />
+      <text x="20" y="32" fill="#ff385c" font-size="15" font-weight="700">AI Concierge Floating Widget</text>
+      <text x="20" y="52" fill="#cbd5e1" font-size="12">Conversational UI &#8226; Prompt Chips</text>
+      <text x="20" y="68" fill="#94a3b8" font-size="11">Typing Indicators &#8226; Clickable Listing Cards</text>
+    </g>
+  </g>
+
+  <!-- Flow Arrows: Client to Backend -->
+  <path d="M 800 300 L 800 360" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrow)" />
+  <text x="815" y="335" fill="#38bdf8" font-size="12" font-weight="600">HTTP / REST (JWT Cookies &#8226; JSON &#8226; Multipart Stream)</text>
+
+  <!-- ============================================================ -->
+  <!-- 2. APPLICATION / BACKEND LAYER (MIDDLE ROW) -->
+  <!-- ============================================================ -->
+  <g transform="translate(60, 360)">
+    <rect width="1480" height="280" rx="16" fill="#1e1b4b" fill-opacity="0.5" stroke="#4338ca" stroke-width="1.5" filter="url(#cardShadow)" />
+    <!-- Header Badge -->
+    <rect x="24" y="18" width="280" height="28" rx="6" fill="#4338ca" fill-opacity="0.3" stroke="#818cf8" stroke-width="1" />
+    <text x="36" y="37" fill="#a5b4fc" font-size="12" font-weight="700">2. APPLICATION LAYER (Node.js &amp; Express.js MVC)</text>
+
+    <!-- Sub-Section A: Middlewares -->
+    <text x="30" y="75" fill="#94a3b8" font-size="12" font-weight="700" letter-spacing="0.5">MIDDLEWARE PIPELINE</text>
+    <g transform="translate(24, 85)">
+      <!-- Box 1 -->
+      <rect width="210" height="60" rx="8" fill="#0f172a" stroke="#312e81" />
+      <text x="14" y="27" fill="#e2e8f0" font-size="13" font-weight="700">attachCurrentUser</text>
+      <text x="14" y="47" fill="#94a3b8" font-size="11">Verifies JWT in httpOnly Cookie</text>
+    </g>
+    <g transform="translate(250, 85)">
+      <!-- Box 2 -->
+      <rect width="210" height="60" rx="8" fill="#0f172a" stroke="#312e81" />
+      <text x="14" y="27" fill="#e2e8f0" font-size="13" font-weight="700">isLoggedIn &amp; isOwner</text>
+      <text x="14" y="47" fill="#94a3b8" font-size="11">Role-Based &amp; Resource RBAC</text>
+    </g>
+    <g transform="translate(476, 85)">
+      <!-- Box 3 -->
+      <rect width="210" height="60" rx="8" fill="#0f172a" stroke="#312e81" />
+      <text x="14" y="27" fill="#e2e8f0" font-size="13" font-weight="700">Joi Schema Validation</text>
+      <text x="14" y="47" fill="#94a3b8" font-size="11">Listing &amp; Review Sanitization</text>
+    </g>
+    <g transform="translate(702, 85)">
+      <!-- Box 4 -->
+      <rect width="210" height="60" rx="8" fill="#0f172a" stroke="#e11d48" />
+      <text x="14" y="27" fill="#f43f5e" font-size="13" font-weight="700">Multer Storage Engine</text>
+      <text x="14" y="47" fill="#fda4af" font-size="11">Streams multipart/form-data</text>
+    </g>
+
+    <!-- Sub-Section B: Controllers & Services -->
+    <text x="30" y="175" fill="#94a3b8" font-size="12" font-weight="700" letter-spacing="0.5">CONTROLLERS &amp; IN-APP SERVICES</text>
+    <g transform="translate(24, 185)">
+      <!-- Listing Controller -->
+      <rect width="250" height="75" rx="8" fill="#0f172a" stroke="#4338ca" />
+      <text x="16" y="28" fill="#f8fafc" font-size="14" font-weight="700">listings.js</text>
+      <text x="16" y="48" fill="#94a3b8" font-size="11">CRUD &#8226; Category Filter &#8226; Search</text>
+      <text x="16" y="64" fill="#64748b" font-size="10">Auto-Generates Vector Embeddings</text>
+    </g>
+    <g transform="translate(290, 185)">
+      <!-- Cart Controller -->
+      <rect width="250" height="75" rx="8" fill="#0f172a" stroke="#4338ca" />
+      <text x="16" y="28" fill="#f8fafc" font-size="14" font-weight="700">cart.js &amp; booking.js</text>
+      <text x="16" y="48" fill="#94a3b8" font-size="11">Duration Math &#8226; UTC Normalization</text>
+      <text x="16" y="64" fill="#64748b" font-size="10">No Past Dates &#8226; Status Lifecycle</text>
+    </g>
+    <g transform="translate(556, 185)">
+      <!-- Users Controller -->
+      <rect width="220" height="75" rx="8" fill="#0f172a" stroke="#4338ca" />
+      <text x="16" y="28" fill="#f8fafc" font-size="14" font-weight="700">users.js &amp; reviews.js</text>
+      <text x="16" y="48" fill="#94a3b8" font-size="11">JWT Token Sign &#8226; bcrypt Hash</text>
+      <text x="16" y="64" fill="#64748b" font-size="10">Cascade Delete on Listings</text>
+    </g>
+
+    <g transform="translate(792, 185)">
+      <!-- Embedding Service -->
+      <rect width="320" height="75" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="1.2" />
+      <text x="16" y="28" fill="#34d399" font-size="14" font-weight="700">embeddingService.js</text>
+      <text x="16" y="48" fill="#cbd5e1" font-size="11">@xenova/transformers (all-MiniLM-L6-v2)</text>
+      <text x="16" y="64" fill="#94a3b8" font-size="10">384d Dense Vectors &#8226; In-Memory Cosine Ranking</text>
+    </g>
+
+    <g transform="translate(1128, 185)">
+      <!-- AI Service -->
+      <rect width="325" height="75" rx="8" fill="#0f172a" stroke="#c084fc" stroke-width="1.2" />
+      <text x="16" y="28" fill="#e879f9" font-size="14" font-weight="700">aiService.js (RAG Pipeline)</text>
+      <text x="16" y="48" fill="#cbd5e1" font-size="11">Multi-turn Memory &#8226; Fallback Arrays</text>
+      <text x="16" y="64" fill="#94a3b8" font-size="10">Context Injection &#8226; Groq SDK Calls</text>
+    </g>
+  </g>
+
+  <!-- Flow Arrows: Backend to DB & Cloud -->
+  <path d="M 400 640 L 400 700" stroke="#10b981" stroke-width="2.5" marker-end="url(#arrowGreen)" />
+  <text x="290" y="675" fill="#34d399" font-size="12" font-weight="600">Mongoose ODM &#8226; CRUD Queries</text>
+
+  <path d="M 1200 640 L 1200 700" stroke="#a855f7" stroke-width="2.5" marker-end="url(#arrowPurple)" />
+  <text x="1215" y="675" fill="#c084fc" font-size="12" font-weight="600">External HTTPS APIs (Media &#8226; Geocoding &#8226; LLM)</text>
+
+  <!-- ============================================================ -->
+  <!-- 3. DATABASE & CLOUD LAYER (BOTTOM ROW SPLIT) -->
+  <!-- ============================================================ -->
+  
+  <!-- Left Side: MongoDB Database Layer -->
+  <g transform="translate(60, 700)">
+    <rect width="700" height="200" rx="16" fill="#064e3b" fill-opacity="0.4" stroke="#059669" stroke-width="1.5" filter="url(#cardShadow)" />
+    <!-- Header Badge -->
+    <rect x="24" y="18" width="260" height="28" rx="6" fill="#059669" fill-opacity="0.3" stroke="#34d399" stroke-width="1" />
+    <text x="36" y="37" fill="#6ee7b7" font-size="12" font-weight="700">3. DATA LAYER (MongoDB &amp; Atlas)</text>
+
+    <!-- Schema Collections -->
+    <g transform="translate(24, 60)">
+      <rect width="150" height="115" rx="8" fill="#0f172a" stroke="#047857" />
+      <text x="16" y="30" fill="#34d399" font-size="13" font-weight="700">Users</text>
+      <text x="16" y="52" fill="#94a3b8" font-size="11">&#8226; username</text>
+      <text x="16" y="70" fill="#94a3b8" font-size="11">&#8226; email (unique)</text>
+      <text x="16" y="88" fill="#94a3b8" font-size="11">&#8226; bcrypt password</text>
+    </g>
+
+    <g transform="translate(186, 60)">
+      <rect width="180" height="115" rx="8" fill="#0f172a" stroke="#047857" />
+      <text x="16" y="30" fill="#34d399" font-size="13" font-weight="700">Listings</text>
+      <text x="16" y="52" fill="#94a3b8" font-size="11">&#8226; title, price, desc</text>
+      <text x="16" y="70" fill="#94a3b8" font-size="11">&#8226; Point [lng, lat]</text>
+      <text x="16" y="88" fill="#6ee7b7" font-size="11">&#8226; 384d embedding[]</text>
+      <text x="16" y="104" fill="#94a3b8" font-size="10">&#8226; owner (ref: User)</text>
+    </g>
+
+    <g transform="translate(378, 60)">
+      <rect width="145" height="115" rx="8" fill="#0f172a" stroke="#047857" />
+      <text x="16" y="30" fill="#34d399" font-size="13" font-weight="700">Reviews</text>
+      <text x="16" y="52" fill="#94a3b8" font-size="11">&#8226; rating (1-5)</text>
+      <text x="16" y="70" fill="#94a3b8" font-size="11">&#8226; comment</text>
+      <text x="16" y="88" fill="#94a3b8" font-size="11">&#8226; author (ref)</text>
+    </g>
+
+    <g transform="translate(535, 60)">
+      <rect width="140" height="115" rx="8" fill="#0f172a" stroke="#047857" />
+      <text x="16" y="30" fill="#34d399" font-size="13" font-weight="700">Bookings</text>
+      <text x="16" y="52" fill="#94a3b8" font-size="11">&#8226; user &amp; listing</text>
+      <text x="16" y="70" fill="#94a3b8" font-size="11">&#8226; checkIn / out</text>
+      <text x="16" y="88" fill="#94a3b8" font-size="11">&#8226; totalAmount</text>
+      <text x="16" y="104" fill="#94a3b8" font-size="10">&#8226; status: in_cart</text>
+    </g>
+  </g>
+
+  <!-- Right Side: Cloud Services & AI Engines -->
+  <g transform="translate(800, 700)">
+    <rect width="740" height="200" rx="16" fill="#3b0764" fill-opacity="0.4" stroke="#7e22ce" stroke-width="1.5" filter="url(#cardShadow)" />
+    <!-- Header Badge -->
+    <rect x="24" y="18" width="310" height="28" rx="6" fill="#7e22ce" fill-opacity="0.3" stroke="#c084fc" stroke-width="1" />
+    <text x="36" y="37" fill="#e9d5ff" font-size="12" font-weight="700">4. CLOUD &amp; AI SERVICE INTEGRATIONS</text>
+
+    <!-- Cloud Services Cards -->
+    <g transform="translate(24, 60)">
+      <rect width="220" height="115" rx="8" fill="#0f172a" stroke="#581c87" />
+      <text x="16" y="30" fill="#ff385c" font-size="14" font-weight="700">Cloudinary CDN</text>
+      <text x="16" y="52" fill="#cbd5e1" font-size="11">&#8226; Direct multi-part stream</text>
+      <text x="16" y="70" fill="#cbd5e1" font-size="11">&#8226; Secure image hosting</text>
+      <text x="16" y="88" fill="#cbd5e1" font-size="11">&#8226; On-the-fly transforms</text>
+      <text x="16" y="104" fill="#94a3b8" font-size="10">   (e.g., /upload/w_250)</text>
+    </g>
+
+    <g transform="translate(260, 60)">
+      <rect width="220" height="115" rx="8" fill="#0f172a" stroke="#581c87" />
+      <text x="16" y="30" fill="#38bdf8" font-size="14" font-weight="700">Mapbox SDK</text>
+      <text x="16" y="52" fill="#cbd5e1" font-size="11">&#8226; Forward Geocoding</text>
+      <text x="16" y="70" fill="#cbd5e1" font-size="11">&#8226; Address &#8594; [lng, lat]</text>
+      <text x="16" y="88" fill="#cbd5e1" font-size="11">&#8226; Point Geometry stored</text>
+      <text x="16" y="104" fill="#94a3b8" font-size="10">   in MongoDB GeoJSON</text>
+    </g>
+
+    <g transform="translate(496, 60)">
+      <rect width="220" height="115" rx="8" fill="#0f172a" stroke="#c084fc" />
+      <text x="16" y="30" fill="#e879f9" font-size="14" font-weight="700">Groq Cloud LPUs</text>
+      <text x="16" y="52" fill="#cbd5e1" font-size="11">&#8226; Llama 3.3 70B Versatile</text>
+      <text x="16" y="70" fill="#cbd5e1" font-size="11">&#8226; Blazing inference speed</text>
+      <text x="16" y="88" fill="#cbd5e1" font-size="11">&#8226; Natural travel advice</text>
+      <text x="16" y="104" fill="#94a3b8" font-size="10">&#8226; Fallback model array</text>
+    </g>
+  </g>
+
+</svg>

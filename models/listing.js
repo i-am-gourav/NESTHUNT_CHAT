@@ -61,6 +61,11 @@ const listingSchema = new Schema({
             type: [Number],
             required: true
         }
+    },
+
+    embedding: {
+        type: [Number],
+        default: []
     }
 });
 

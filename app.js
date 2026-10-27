@@ -16,21 +16,30 @@ const listingRouter = require("./routes/listings.js");
 const reviewRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/users.js");
 const cartRouter = require("./routes/cart.js");
+const chatRouter = require("./routes/chat.js");
 
-const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/NESTHUNT";
+const dbUrl = process.env.ATLASDB_URL;
+const localDbUrl = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/NESTHUNT";
 
-// Connect to MongoDB
+// Connect to MongoDB with graceful fallback to local database
 async function main() {
-    await mongoose.connect(MONGO_URL);
+    if (dbUrl) {
+        try {
+            await mongoose.connect(dbUrl, { serverSelectionTimeoutMS: 4000 });
+            console.log("Connected to MongoDB Atlas");
+            return;
+        } catch (atlasErr) {
+            console.warn("MongoDB Atlas connection failed. Falling back to local DB:", atlasErr.message);
+        }
+    }
+
+    await mongoose.connect(localDbUrl);
+    console.log("Connected to Local MongoDB");
 }
 
-main()
-    .then(() => {
-        console.log("Connected to DB");
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+main().catch((err) => {
+    console.error("MongoDB connection error:", err.message);
+});
 
 // View Engine & Static Setup
 app.set("view engine", "ejs");
@@ -67,6 +76,7 @@ app.use("/", userRouter);
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/cart", cartRouter);
+app.use("/chat", chatRouter);
 
 // ==========================================
 // ERROR HANDLING

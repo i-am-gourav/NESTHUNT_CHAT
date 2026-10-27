@@ -1,6 +1,7 @@
 const Listing = require("../models/listing.js");
 const ExpressError = require("../utils/ExpressError.js");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const { generateEmbedding, buildListingDocument } = require("../services/embeddingService.js");
 
 const getGeocoder = () => {
     const token = process.env.MAP_TOKEN;
@@ -91,6 +92,13 @@ module.exports.createListing = async (req, res) => {
     newListing.image = { url, filename };
     newListing.geometry = geometry;
 
+    try {
+        const docText = buildListingDocument(newListing);
+        newListing.embedding = await generateEmbedding(docText);
+    } catch (embErr) {
+        console.error("Embedding generation error on create:", embErr.message);
+    }
+
     await newListing.save();
     res.redirect("/listings");
 };
@@ -171,6 +179,14 @@ module.exports.updateListing = async (req, res) => {
         let filename = req.file.filename;
         listing.image = { url, filename };
         await listing.save();
+    }
+
+    try {
+        const docText = buildListingDocument(listing);
+        listing.embedding = await generateEmbedding(docText);
+        await listing.save();
+    } catch (embErr) {
+        console.error("Embedding generation error on update:", embErr.message);
     }
 
     res.redirect(`/listings/${id}`);

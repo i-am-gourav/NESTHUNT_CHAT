@@ -37,9 +37,18 @@ NestHunt enables users to explore stays across the globe, filter properties by c
 - Automatic forward geocoding with `@mapbox/mapbox-sdk` to derive coordinates upon listing creation and update.
 - Client-side Mapbox GL JS rendering with custom location pins and detail popups on listing show pages.
 
-### ⭐ 6. Reviews & Rating System
-- Review submissions with author attribution and delete permissions.
-- Animated Starability slot-machine rating inputs and badges.
+### 🛒 6. Cart & Booking Engine
+- **Date Range Calculation**: Server-side duration validation, UTC midnight normalization, and past-date prevention.
+- **Cart Management**: Add stays to cart, view total cost, update stay dates, or remove items.
+- **Booking Lifecycle**: Tracks states (`in_cart` ➡️ `pending` ➡️ `confirmed` ➡️ `cancelled`).
+
+### 🤖 7. AI Concierge & RAG Chatbot
+- **Local In-App Vector Embeddings**: Uses `@xenova/transformers` (`all-MiniLM-L6-v2`) to generate 384-dimensional dense vectors directly in Node.js (100% free, zero external API keys needed).
+- **Cosine Similarity Vector Search**: Fast in-memory similarity ranking to retrieve the top matching properties from MongoDB.
+- **Groq-Powered Intelligence**: Blazing fast natural language synthesis using Meta's **Llama 3.3 70B** hosted on Groq LPUs.
+- **Conversational Memory**: Retains multi-turn dialogue history for natural follow-up queries (e.g. *"Which of these has a pool?"*).
+- **Interactive UI Cards**: Sleek floating concierge widget across all pages with quick-prompt chips, typing indicators, and clickable listing cards.
+- **Auto-Embedding Lifecycle**: Automatically computes and stores embeddings whenever a host creates or edits a listing.
 
 ---
 
@@ -49,6 +58,7 @@ NestHunt enables users to explore stays across the globe, filter properties by c
 |---|---|
 | **Frontend** | EJS (Embedded JavaScript), HTML5, CSS3, Bootstrap 5, FontAwesome 6 |
 | **Backend** | Node.js, Express.js (MVC Architecture, Express Router) |
+| **AI & RAG Engine** | Groq SDK (`groq-sdk`, Llama 3.3), Function Calling & MongoDB Retrieval |
 | **Database** | MongoDB, Mongoose ODM |
 | **Authentication** | JSON Web Tokens (`jsonwebtoken`), `bcrypt`, `cookie-parser` |
 | **Media Storage** | Cloudinary v2, `multer`, `multer-storage-cloudinary` |
@@ -58,25 +68,31 @@ NestHunt enables users to explore stays across the globe, filter properties by c
 ---
 
 ## 🏗️ Project Structure
-
-```text
+ 
+ ```text
 NESTHUNT/
 ├── controllers/          # Business logic handlers
 │   ├── listings.js       # Listing CRUD, search & filter logic
 │   ├── reviews.js        # Review creation & deletion
+│   ├── cart.js           # Cart & booking calculations
+│   ├── chat.js           # AI concierge endpoint
 │   └── users.js          # JWT login, signup, logout
 ├── models/               # Mongoose data models
+│   ├── booking.js        # Booking schema (user, listing, dates, total, status)
 │   ├── listing.js        # Listing schema (geometry, category, owner, reviews)
 │   ├── review.js         # Review schema (rating, comment, author)
 │   └── user.js           # User schema (email, username, bcrypt hash)
 ├── routes/               # Express modular route definitions
 │   ├── listings.js       # /listings endpoints
 │   ├── reviews.js        # /listings/:id/reviews endpoints
+│   ├── cart.js           # /cart endpoints
+│   ├── chat.js           # /chat endpoints
 │   └── users.js          # /signup, /login, /logout endpoints
 ├── views/                # EJS server-rendered templates
 │   ├── includes/         # Navbar (search), Footer
 │   ├── layouts/          # Boilerplate layout
 │   ├── listings/         # Home index, show, new, edit
+│   ├── cart/             # Cart review and date editing
 │   └── users/            # Login, signup
 ├── public/               # Static assets
 │   ├── css/              # style.css (custom design system, filters, tax switch)
@@ -115,10 +131,12 @@ CLOUD_NAME=your_cloudinary_cloud_name
 CLOUD_API_KEY=your_cloudinary_api_key
 CLOUD_API_SECRET=your_cloudinary_api_secret
 MAP_TOKEN=your_mapbox_public_token
+GROQ_API_KEY=your_groq_api_key_here
 ```
 
 ### 4. Seed Database (Optional)
 ```bash
+# Seed listings
 node init/index.js
 ```
 
