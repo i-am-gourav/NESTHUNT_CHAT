@@ -40,11 +40,43 @@ const bookingSchema = new Schema({
         enum: ["in_cart", "pending", "confirmed", "cancelled"],
         default: "in_cart"
     },
+    payment: {
+        orderId: {
+            type: String,
+            default: null,
+            index: true
+        },
+        paymentId: {
+            type: String,
+            default: null,
+            index: true
+        },
+        signature: {
+            type: String,
+            default: null
+        },
+        status: {
+            type: String,
+            enum: ["unpaid", "pending", "paid", "failed"],
+            default: "unpaid"
+        },
+        method: {
+            type: String,
+            default: "razorpay"
+        },
+        paidAt: {
+            type: Date,
+            default: null
+        }
+    },
     createdAt: {
         type: Date,
         default: Date.now
     }
 });
+
+bookingSchema.index({ user: 1, status: 1 });
+bookingSchema.index({ listing: 1, status: 1 });
 
 const Booking = mongoose.model("Booking", bookingSchema);
 

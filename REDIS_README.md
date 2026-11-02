@@ -211,3 +211,4 @@ REDIS_URL=redis://127.0.0.1:6379
 
 #### Q4: "How do you handle Cache Penetration?"
 > *"If malicious users request non-existent listing IDs (`/listings/invalid-id-999`), every request hits MongoDB. We defend against this by caching empty / null responses with a short 60-second TTL or using an upstream Bloom Filter."*
+

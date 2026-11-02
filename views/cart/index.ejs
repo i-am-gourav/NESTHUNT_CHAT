@@ -230,15 +230,21 @@
                     <div class="alert alert-light border rounded-3 small text-muted mb-3 d-flex align-items-start gap-2">
                         <i class="fa-solid fa-shield-halved text-success mt-1"></i>
                         <div>
-                            <strong>No payment required yet.</strong> Your cart is saved securely and ready for checkout.
+                            <strong>Instant Confirmation:</strong> Powered by Razorpay payment gateway with 256-bit encryption.
                         </div>
                     </div>
 
-                    <button class="btn btn-danger w-100 py-2 rounded-pill fw-semibold mb-2 shadow-sm" disabled title="Payment gateway integration coming soon">
-                        <i class="fa-solid fa-lock me-2"></i>Proceed to Checkout
+                    <button id="checkout-btn" class="btn btn-danger w-100 py-2 rounded-pill fw-semibold mb-2 shadow-sm d-flex align-items-center justify-content-center gap-2">
+                        <i class="fa-solid fa-lock"></i>
+                        <span id="checkout-btn-text">Pay ₹<%= cartTotal.toLocaleString("en-IN") %> with Razorpay</span>
+                        <div id="checkout-spinner" class="spinner-border spinner-border-sm d-none" role="status"></div>
                     </button>
+                    <div id="checkout-error" class="alert alert-danger py-2 small rounded-3 d-none mb-2" role="alert"></div>
+
                     <div class="text-center">
-                        <small class="text-muted d-block mb-3">Payment processing will be enabled in the next step</small>
+                        <small class="text-muted d-block mb-3">
+                            <i class="fa-solid fa-credit-card me-1"></i>Cards, UPI, Netbanking & Wallets supported
+                        </small>
                         <a href="/listings" class="text-decoration-none small text-dark fw-semibold">
                             <i class="fa-solid fa-arrow-left me-1"></i>Continue Exploring Stays
                         </a>
@@ -307,5 +313,143 @@
             checkInInput.addEventListener("input", updateCalculation);
             checkOutInput.addEventListener("input", updateCalculation);
         });
+
+        // ==========================================
+        // RAZORPAY CHECKOUT & PAYMENT VERIFICATION
+        // ==========================================
+        const checkoutBtn = document.getElementById("checkout-btn");
+        const checkoutBtnText = document.getElementById("checkout-btn-text");
+        const checkoutSpinner = document.getElementById("checkout-spinner");
+        const checkoutError = document.getElementById("checkout-error");
+
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener("click", async () => {
+                checkoutBtn.disabled = true;
+                checkoutBtnText.innerText = "Creating Razorpay Order...";
+                checkoutSpinner.classList.remove("d-none");
+                checkoutError.classList.add("d-none");
+
+                try {
+                    // 1. Order Creation via Backend
+                    const res = await fetch("/payment/create-order", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" }
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok || !data.success) {
+                        throw new Error(data.message || "Failed to create checkout order");
+                    }
+
+                    // 2. Open Razorpay modal if real Razorpay client is available and active
+                    if (window.Razorpay && !data.isSimulated && data.keyId && !data.keyId.includes("simulated")) {
+                        const options = {
+                            key: data.keyId,
+                            amount: data.amount,
+                            currency: data.currency || "INR",
+                            name: "NestHunt Stays",
+                            description: "Rental Booking Payment",
+                            order_id: data.orderId,
+                            prefill: {
+                                name: data.user ? data.user.name : "Guest",
+                                email: data.user ? data.user.email : ""
+                            },
+                            theme: {
+                                color: "#fe424d"
+                            },
+                            handler: async function (response) {
+                                checkoutBtnText.innerText = "Verifying Signature...";
+                                try {
+                                    // 3. Cryptographic Signature Verification
+                                    const verifyRes = await fetch("/payment/verify", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({
+                                            razorpay_order_id: response.razorpay_order_id,
+                                            razorpay_payment_id: response.razorpay_payment_id,
+                                            razorpay_signature: response.razorpay_signature
+                                        })
+                                    });
+
+                                    const verifyData = await verifyRes.json();
+                                    if (verifyRes.ok && verifyData.success) {
+                                        window.location.href = verifyData.redirectUrl;
+                                    } else {
+                                        throw new Error(verifyData.message || "Payment verification failed");
+                                    }
+                                } catch (err) {
+                                    checkoutError.innerText = err.message;
+                                    checkoutError.classList.remove("d-none");
+                                    checkoutBtn.disabled = false;
+                                    checkoutBtnText.innerText = "Retry Payment";
+                                    checkoutSpinner.classList.add("d-none");
+                                }
+                            },
+                            modal: {
+                                ondismiss: function () {
+                                    checkoutBtn.disabled = false;
+                                    checkoutBtnText.innerText = "Pay with Razorpay";
+                                    checkoutSpinner.classList.add("d-none");
+                                }
+                            }
+                        };
+
+                        const rzp = new window.Razorpay(options);
+                        rzp.on("payment.failed", function (response) {
+                            checkoutError.innerText = response.error ? response.error.description : "Payment failed. Please retry.";
+                            checkoutError.classList.remove("d-none");
+                            checkoutBtn.disabled = false;
+                            checkoutBtnText.innerText = "Retry Payment";
+                            checkoutSpinner.classList.add("d-none");
+                        });
+                        rzp.open();
+                    } else {
+                        // Sandbox Mode: Real-time verification without requiring external banking window
+                        checkoutBtnText.innerText = "Simulating Razorpay Payment...";
+                        
+                        // Wait 1.2s to realistically simulate network transaction
+                        setTimeout(async () => {
+                            try {
+                                const testPaymentId = "pay_test_" + Date.now();
+                                const testSignature = "simulated_sig_" + Date.now();
+
+                                const verifyRes = await fetch("/payment/verify", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({
+                                        razorpay_order_id: data.orderId,
+                                        razorpay_payment_id: testPaymentId,
+                                        razorpay_signature: testSignature
+                                    })
+                                });
+
+                                const verifyData = await verifyRes.json();
+                                if (verifyRes.ok && verifyData.success) {
+                                    window.location.href = verifyData.redirectUrl;
+                                } else {
+                                    throw new Error(verifyData.message || "Simulated payment verification failed");
+                                }
+                            } catch (err) {
+                                checkoutError.innerText = err.message;
+                                checkoutError.classList.remove("d-none");
+                                checkoutBtn.disabled = false;
+                                checkoutBtnText.innerText = "Retry Payment";
+                                checkoutSpinner.classList.add("d-none");
+                            }
+                        }, 1200);
+                    }
+                } catch (err) {
+                    checkoutError.innerText = err.message || "Unable to initialize payment";
+                    checkoutError.classList.remove("d-none");
+                    checkoutBtn.disabled = false;
+                    checkoutBtnText.innerText = "Retry Payment";
+                    checkoutSpinner.classList.add("d-none");
+                }
+            });
+        }
     });
 </script>
+
+<!-- External Razorpay Checkout Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>

@@ -59,6 +59,20 @@ NestHunt enables users to explore stays across the globe, filter properties by c
 - **Cache Avalanche Protection**: Automatically applies a $\pm 10\%$ TTL jitter to prevent simultaneous bulk key expirations.
 - **Graceful Fallback**: If Redis is offline or not configured, the service falls back automatically without throwing unhandled exceptions or crashing the app.
 
+### 💳 9. Razorpay Payment Gateway & Transaction Reconciliation
+- **End-to-End Order Lifecycle**:
+  - **Order Creation**: Backend generates Razorpay orders via `POST /payment/create-order` with calculated cart totals, currency (`INR`), and unique receipt IDs.
+  - **Frontend Checkout Modal**: Client-side checkout modal powered by Razorpay's Checkout SDK with real-time feedback.
+  - **Cryptographic Signature Verification**: Server recalculates `HMAC-SHA256(order_id + "|" + payment_id, secret)` and compares using timing-safe buffer comparison to prevent timing attacks.
+- **Idempotency & Concurrency Safety**:
+  - Redis-backed distributed payment locks (`payment:lock:<orderId>`) prevent double debits and duplicate processing during concurrent clicks.
+- **Server-to-Server Webhook Support**:
+  - Dedicated `/payment/webhook` endpoint with raw body `HMAC-SHA256` signature verification to asynchronously reconcile dropped connections and auto-confirm bookings.
+- **Booking Receipts & History**:
+  - Dedicated `/payment/success/:orderId` printable receipt page and `/bookings` management view.
+- **Hybrid Test & Sandbox Mode**:
+  - Works with real Razorpay test credentials (`rzp_test_...`) and provides realistic simulated fallback in offline/local environments.
+
 ---
 
 ## 🛠️ Technology Stack

@@ -21,6 +21,7 @@ const reviewRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/users.js");
 const cartRouter = require("./routes/cart.js");
 const chatRouter = require("./routes/chat.js");
+const paymentRouter = require("./routes/payment.js");
 
 const dbUrl = process.env.ATLASDB_URL || process.env.MONGO_URL || "mongodb://127.0.0.1:27017/NESTHUNT";
 
@@ -40,7 +41,12 @@ app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 
 // Core Middleware
-app.use(express.json());
+// Raw body preserved for cryptographic Razorpay webhook verification
+app.use(express.json({
+    verify: (req, res, buf) => {
+        req.rawBody = buf;
+    }
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(cookieParser());
@@ -74,6 +80,8 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/cart", cartRouter);
 app.use("/chat", chatRouter);
+app.use("/payment", paymentRouter);
+app.get("/bookings", (req, res) => res.redirect("/payment/my-bookings"));
 
 // ==========================================
 // ERROR HANDLING
