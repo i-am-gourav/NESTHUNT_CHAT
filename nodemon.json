@@ -2,6 +2,7 @@
   "watch": [
     "app.js",
     "controllers",
+    "services",
     "models",
     "routes",
     "views",

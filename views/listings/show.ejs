@@ -238,12 +238,24 @@
                             </div>
                         </div>
 
-                        <!-- Action Button -->
+                        <!-- Action Buttons -->
                         <% if (currentUser) { %>
+                            <!-- Instant Razorpay Booking Button -->
+                            <button 
+                                type="button" 
+                                id="instant-pay-btn" 
+                                class="btn btn-danger w-100 py-3 rounded-pill fw-bold shadow-sm mb-2 d-flex align-items-center justify-content-center gap-2"
+                                disabled
+                            >
+                                <i class="fa-solid fa-bolt"></i>
+                                <span id="instant-pay-text">Book Now with Razorpay</span>
+                            </button>
+
+                            <!-- Add to Cart (Secondary Option) -->
                             <button 
                                 type="submit" 
                                 id="add-to-cart-btn" 
-                                class="btn btn-danger w-100 py-3 rounded-pill fw-bold shadow-sm mb-3"
+                                class="btn btn-outline-dark w-100 py-2 rounded-pill fw-semibold shadow-sm mb-3"
                                 disabled
                             >
                                 <i class="fa-solid fa-cart-plus me-2"></i>Add to Cart
@@ -257,8 +269,16 @@
                             </a>
                         <% } %>
 
-                        <div class="text-center text-muted small">
-                            <i class="fa-solid fa-shield-check text-success me-1"></i> You won't be charged yet
+                        <!-- Razorpay Trust & Security Badge -->
+                        <div class="p-2 bg-light rounded-3 text-center border mt-2">
+                            <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                                <i class="fa-solid fa-shield-halved text-success"></i>
+                                <span class="small fw-bold text-dark">Secured by Razorpay</span>
+                                <span class="badge bg-warning text-dark px-2 py-0" style="font-size: 0.65rem;">TEST MODE</span>
+                            </div>
+                            <div class="text-muted" style="font-size: 0.72rem;">
+                                Instant Confirmation • UPI, Credit/Debit Cards, NetBanking
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -284,6 +304,8 @@
         const subtotalAmountSpan = document.getElementById("subtotal-amount");
         const totalAmountSpan = document.getElementById("total-amount");
         const addToCartBtn = document.getElementById("add-to-cart-btn");
+        const instantPayBtn = document.getElementById("instant-pay-btn");
+        const instantPayText = document.getElementById("instant-pay-text");
         const dateErrorMsg = document.getElementById("date-error-msg");
 
         // Set default minimum dates
@@ -299,6 +321,7 @@
             if (!checkInVal || !checkOutVal) {
                 if (calculationBox) calculationBox.classList.add("d-none");
                 if (addToCartBtn) addToCartBtn.disabled = true;
+                if (instantPayBtn) instantPayBtn.disabled = true;
                 if (dateErrorMsg) dateErrorMsg.classList.add("d-none");
                 return;
             }
@@ -326,6 +349,7 @@
                 if (calculationBox) calculationBox.classList.remove("d-none");
                 if (dateErrorMsg) dateErrorMsg.classList.add("d-none");
                 if (addToCartBtn) addToCartBtn.disabled = false;
+                if (instantPayBtn) instantPayBtn.disabled = false;
             } else {
                 if (calculationBox) calculationBox.classList.add("d-none");
                 if (dateErrorMsg) {
@@ -333,6 +357,7 @@
                     dateErrorMsg.classList.remove("d-none");
                 }
                 if (addToCartBtn) addToCartBtn.disabled = true;
+                if (instantPayBtn) instantPayBtn.disabled = true;
             }
         }
 
@@ -349,6 +374,48 @@
             checkOutInput.addEventListener("change", calculateDetails);
             checkInInput.addEventListener("input", calculateDetails);
             checkOutInput.addEventListener("input", calculateDetails);
+        }
+
+        // Instant Book with Razorpay Click Handler
+        if (instantPayBtn) {
+            instantPayBtn.addEventListener("click", async () => {
+                instantPayBtn.disabled = true;
+                if (instantPayText) instantPayText.textContent = "Initializing Razorpay...";
+
+                try {
+                    const res = await fetch("/payment/instant-checkout", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            listingId: listing._id,
+                            checkIn: checkInInput.value,
+                            checkOut: checkOutInput.value
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (!res.ok || !data.success) {
+                        throw new Error(data.message || "Failed to initialize payment");
+                    }
+
+                    // Open Universal Razorpay Checkout (SDK or interactive modal)
+                    if (window.NestHuntPayment) {
+                        window.NestHuntPayment.openCheckout(data);
+                    } else {
+                        alert("Payment module is loading. Please retry in 1 second.");
+                    }
+                } catch (err) {
+                    if (dateErrorMsg) {
+                        dateErrorMsg.textContent = err.message || "Unable to initiate payment";
+                        dateErrorMsg.classList.remove("d-none");
+                    } else {
+                        alert(err.message || "Unable to initiate payment");
+                    }
+                } finally {
+                    instantPayBtn.disabled = false;
+                    if (instantPayText) instantPayText.textContent = "Book Now with Razorpay";
+                }
+            });
         }
     });
 </script>

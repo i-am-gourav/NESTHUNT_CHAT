@@ -9,6 +9,7 @@ router.post("/webhook", wrapAsync(paymentController.handleWebhook));
 
 // Authenticated Endpoints
 router.post("/create-order", isLoggedIn, wrapAsync(paymentController.createOrder));
+router.post("/instant-checkout", isLoggedIn, wrapAsync(paymentController.instantCheckout));
 router.post("/verify", isLoggedIn, wrapAsync(paymentController.verifyPayment));
 router.get("/success/:orderId", isLoggedIn, wrapAsync(paymentController.paymentSuccess));
 router.get("/my-bookings", isLoggedIn, wrapAsync(paymentController.myBookings));

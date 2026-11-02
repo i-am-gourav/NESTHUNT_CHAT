@@ -1,0 +1,254 @@
+<!-- Reusable Razorpay Interactive Payment Modal & Checkout Script -->
+<div class="modal fade" id="razorpayInteractiveModal" tabindex="-1" aria-labelledby="razorpayModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <!-- Razorpay Branded Header -->
+      <div class="modal-header text-white p-4" style="background: linear-gradient(135deg, #0c2340 0%, #173b6c 100%);">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <div class="d-flex align-items-center gap-2">
+            <div class="bg-white rounded-3 p-1 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+              <i class="fa-solid fa-bolt text-primary fs-5"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold m-0" id="razorpayModalLabel">NestHunt Stays</h5>
+              <small class="text-white-50" id="rzp-modal-order-desc">Booking Reservation</small>
+            </div>
+          </div>
+          <div class="text-end">
+            <span class="badge bg-warning text-dark px-2 py-1 small fw-semibold">TEST MODE</span>
+            <div class="fs-4 fw-bold mt-1" id="rzp-modal-amount">₹0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Razorpay Payment Body -->
+      <div class="modal-body p-4 bg-light">
+        <!-- Order Meta -->
+        <div class="d-flex justify-content-between align-items-center small text-muted mb-3 pb-2 border-bottom">
+          <span>Order ID: <strong class="text-dark font-monospace" id="rzp-modal-order-id">order_...</strong></span>
+          <span class="badge bg-success-subtle text-success border border-success px-2">256-bit Encrypted</span>
+        </div>
+
+        <!-- Payment Method Tabs -->
+        <ul class="nav nav-pills nav-fill mb-3 bg-white p-1 rounded-3 border" id="rzpPaymentTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active small py-2 fw-semibold" id="rzp-card-tab" data-bs-toggle="pill" data-bs-target="#rzp-card-pane" type="button" role="tab">
+              <i class="fa-regular fa-credit-card me-1"></i>Cards
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link small py-2 fw-semibold" id="rzp-upi-tab" data-bs-toggle="pill" data-bs-target="#rzp-upi-pane" type="button" role="tab">
+              <i class="fa-solid fa-mobile-screen me-1"></i>UPI / QR
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link small py-2 fw-semibold" id="rzp-nb-tab" data-bs-toggle="pill" data-bs-target="#rzp-nb-pane" type="button" role="tab">
+              <i class="fa-solid fa-building-columns me-1"></i>NetBanking
+            </button>
+          </li>
+        </ul>
+
+        <!-- Tab Contents -->
+        <div class="tab-content bg-white p-3 rounded-3 border mb-3" id="rzpTabContent">
+          <!-- Card Tab -->
+          <div class="tab-pane fade show active" id="rzp-card-pane" role="tabpanel">
+            <div class="mb-2">
+              <label class="form-label small text-muted mb-1 fw-semibold">Card Number (Razorpay Test Card)</label>
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white"><i class="fa-brands fa-cc-visa text-primary fs-6"></i></span>
+                <input type="text" class="form-control" value="4111 2222 3333 4444" readonly>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-6">
+                <label class="form-label small text-muted mb-1 fw-semibold">Expiry</label>
+                <input type="text" class="form-control form-control-sm" value="12/28" readonly>
+              </div>
+              <div class="col-6">
+                <label class="form-label small text-muted mb-1 fw-semibold">CVV</label>
+                <input type="password" class="form-control form-control-sm" value="123" readonly>
+              </div>
+            </div>
+          </div>
+
+          <!-- UPI Tab -->
+          <div class="tab-pane fade text-center py-2" id="rzp-upi-pane" role="tabpanel">
+            <div class="p-2 border rounded-3 d-inline-block bg-white shadow-sm mb-2">
+              <i class="fa-solid fa-qrcode fa-5x text-dark"></i>
+            </div>
+            <p class="small text-muted mb-1">Scan QR code or use test UPI ID:</p>
+            <span class="badge bg-light text-dark border px-3 py-1 font-monospace">user@okhdfcbank</span>
+          </div>
+
+          <!-- NetBanking Tab -->
+          <div class="tab-pane fade" id="rzp-nb-pane" role="tabpanel">
+            <label class="form-label small text-muted mb-2 fw-semibold">Select Popular Bank</label>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-light text-dark border p-2 flex-grow-1 text-center"><i class="fa-solid fa-check text-primary me-1"></i>HDFC Bank</span>
+              <span class="badge bg-light text-dark border p-2 flex-grow-1 text-center">ICICI Bank</span>
+              <span class="badge bg-light text-dark border p-2 flex-grow-1 text-center">State Bank of India</span>
+              <span class="badge bg-light text-dark border p-2 flex-grow-1 text-center">Axis Bank</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verification Error Banner -->
+        <div id="rzp-modal-error" class="alert alert-danger py-2 small rounded-3 d-none mb-3"></div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex flex-column gap-2">
+          <button type="button" class="btn btn-primary py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" id="rzp-modal-pay-btn" style="background: #0c2340; border-color: #0c2340;">
+            <i class="fa-solid fa-lock"></i>
+            <span id="rzp-modal-pay-text">Pay & Confirm Booking</span>
+            <div id="rzp-modal-spinner" class="spinner-border spinner-border-sm d-none" role="status"></div>
+          </button>
+          <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-sm btn-link text-muted text-decoration-none" data-bs-dismiss="modal">
+              <i class="fa-solid fa-xmark me-1"></i>Cancel Payment
+            </button>
+            <button type="button" class="btn btn-sm btn-link text-danger text-decoration-none" id="rzp-modal-fail-btn">
+              Simulate Failure
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Branding -->
+      <div class="modal-footer bg-white py-2 justify-content-center border-top">
+        <span class="text-muted small" style="font-size: 0.75rem;">
+          <i class="fa-solid fa-shield-halved text-success me-1"></i>Secured by <strong>Razorpay</strong> Payment Suite
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Razorpay Universal Client Dispatcher Script -->
+<script>
+  window.NestHuntPayment = (function() {
+    let currentOrder = null;
+    let modalInstance = null;
+
+    function getModal() {
+      const modalEl = document.getElementById("razorpayInteractiveModal");
+      if (!modalEl) return null;
+      if (!modalInstance) {
+        modalInstance = new bootstrap.Modal(modalEl);
+      }
+      return modalInstance;
+    }
+
+    /**
+     * Dispatches payment: opens official Razorpay modal if live key, or interactive test modal if sandbox.
+     */
+    function openCheckout(orderData) {
+      currentOrder = orderData;
+      const modalEl = document.getElementById("razorpayInteractiveModal");
+      const errBox = document.getElementById("rzp-modal-error");
+      if (errBox) errBox.classList.add("d-none");
+
+      // Check if real Razorpay test key is provided and SDK is loaded
+      const hasRealKey = orderData.keyId && !orderData.keyId.includes("simulated") && orderData.keyId.startsWith("rzp_test_") && !orderData.isSimulated;
+
+      if (window.Razorpay && hasRealKey) {
+        const options = {
+          key: orderData.keyId,
+          amount: orderData.amount,
+          currency: orderData.currency || "INR",
+          name: "NestHunt Stays",
+          description: orderData.listingTitle ? `Booking for ${orderData.listingTitle}` : "Rental Booking Payment",
+          order_id: orderData.orderId,
+          prefill: {
+            name: orderData.user ? orderData.user.name : "Guest",
+            email: orderData.user ? orderData.user.email : ""
+          },
+          theme: { color: "#fe424d" },
+          handler: async function(response) {
+            await verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature
+            });
+          }
+        };
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+        return;
+      }
+
+      // Interactive Test Modal
+      document.getElementById("rzp-modal-amount").innerText = `₹${(orderData.amountInRupees || (orderData.amount / 100)).toLocaleString("en-IN")}`;
+      document.getElementById("rzp-modal-order-id").innerText = orderData.orderId;
+      document.getElementById("rzp-modal-order-desc").innerText = orderData.listingTitle || "Booking Reservation";
+      document.getElementById("rzp-modal-pay-text").innerText = `Pay ₹${(orderData.amountInRupees || (orderData.amount / 100)).toLocaleString("en-IN")}`;
+
+      const modal = getModal();
+      if (modal) modal.show();
+    }
+
+    async function verifyPayment(payload) {
+      const payBtn = document.getElementById("rzp-modal-pay-btn");
+      const payText = document.getElementById("rzp-modal-pay-text");
+      const spinner = document.getElementById("rzp-modal-spinner");
+      const errBox = document.getElementById("rzp-modal-error");
+
+      if (payBtn) payBtn.disabled = true;
+      if (payText) payText.innerText = "Verifying Signature...";
+      if (spinner) spinner.classList.remove("d-none");
+      if (errBox) errBox.classList.add("d-none");
+
+      try {
+        const res = await fetch("/payment/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          if (payText) payText.innerText = "Payment Verified! Redirecting...";
+          window.location.href = data.redirectUrl;
+        } else {
+          throw new Error(data.message || "Payment verification failed");
+        }
+      } catch (err) {
+        if (errBox) {
+          errBox.innerText = err.message;
+          errBox.classList.remove("d-none");
+        }
+        if (payBtn) payBtn.disabled = false;
+        if (payText) payText.innerText = "Retry Payment";
+        if (spinner) spinner.classList.add("d-none");
+      }
+    }
+
+    // Bind modal action buttons once DOM is ready
+    document.addEventListener("DOMContentLoaded", () => {
+      const payBtn = document.getElementById("rzp-modal-pay-btn");
+      const failBtn = document.getElementById("rzp-modal-fail-btn");
+      const errBox = document.getElementById("rzp-modal-error");
+
+      if (payBtn) {
+        payBtn.addEventListener("click", async () => {
+          if (!currentOrder) return;
+          await verifyPayment({
+            razorpay_order_id: currentOrder.orderId,
+            razorpay_payment_id: "pay_test_" + Date.now(),
+            razorpay_signature: "simulated_sig_" + Date.now()
+          });
+        });
+      }
+
+      if (failBtn) {
+        failBtn.addEventListener("click", () => {
+          if (errBox) {
+            errBox.innerText = "Simulated payment declined by issuer (Insufficient funds or user cancellation).";
+            errBox.classList.remove("d-none");
+          }
+        });
+      }
+    });
+
+    return { openCheckout, verifyPayment };
+  })();
+</script>

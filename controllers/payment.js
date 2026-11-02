@@ -67,6 +67,93 @@ module.exports.createOrder = async (req, res) => {
 };
 
 /**
+ * POST /payment/instant-checkout
+ * Initiates Razorpay checkout directly for a single listing from the show page.
+ */
+module.exports.instantCheckout = async (req, res) => {
+    const { listingId, checkIn, checkOut } = req.body;
+
+    if (!listingId || !checkIn || !checkOut) {
+        throw new ExpressError(400, "Listing ID, Check-in, and Check-out dates are required");
+    }
+
+    const listing = await Listing.findById(listingId);
+    if (!listing) {
+        throw new ExpressError(404, "Listing not found");
+    }
+
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+
+    if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime())) {
+        throw new ExpressError(400, "Invalid check-in or check-out date format");
+    }
+
+    const start = new Date(Date.UTC(checkInDate.getUTCFullYear(), checkInDate.getUTCMonth(), checkInDate.getUTCDate()));
+    const end = new Date(Date.UTC(checkOutDate.getUTCFullYear(), checkOutDate.getUTCMonth(), checkOutDate.getUTCDate()));
+
+    const now = new Date();
+    const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+    if (start < todayUTC) {
+        throw new ExpressError(400, "Check-in date cannot be in the past");
+    }
+
+    const diffMs = end.getTime() - start.getTime();
+    const numberOfDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+    if (numberOfDays < 1) {
+        throw new ExpressError(400, "Check-out date must be at least 1 night after check-in date");
+    }
+
+    const pricePerDay = Number(listing.price);
+    const totalAmount = pricePerDay * numberOfDays;
+
+    const receiptId = `rcpt_${req.user._id.toString().substring(0, 6)}_${Date.now()}`;
+    const order = await paymentService.createOrder({
+        amount: totalAmount,
+        receipt: receiptId,
+        notes: {
+            userId: req.user._id.toString(),
+            listingId: listing._id.toString(),
+            nights: String(numberOfDays)
+        }
+    });
+
+    const newBooking = new Booking({
+        user: req.user._id,
+        listing: listing._id,
+        checkIn: start,
+        checkOut: end,
+        numberOfDays,
+        pricePerDay,
+        totalAmount,
+        status: "pending",
+        payment: {
+            orderId: order.id,
+            status: "pending"
+        }
+    });
+
+    await newBooking.save();
+
+    res.status(201).json({
+        success: true,
+        orderId: order.id,
+        amount: order.amount,
+        amountInRupees: totalAmount,
+        currency: order.currency || "INR",
+        keyId: paymentService.getPublicKey(),
+        isSimulated: order.isSimulated || false,
+        listingTitle: listing.title,
+        user: {
+            name: req.user.username || "Guest User",
+            email: req.user.email || ""
+        }
+    });
+};
+
+/**
  * POST /payment/verify
  * Cryptographically verifies the payment signature returned by the Razorpay frontend modal.
  */
