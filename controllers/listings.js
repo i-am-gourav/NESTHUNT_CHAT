@@ -2,6 +2,7 @@ const Listing = require("../models/listing.js");
 const ExpressError = require("../utils/ExpressError.js");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const { generateEmbedding, buildListingDocument } = require("../services/embeddingService.js");
+const cacheService = require("../services/cacheService.js");
 
 const getGeocoder = () => {
     const token = process.env.MAP_TOKEN;
@@ -46,7 +47,18 @@ module.exports.index = async (req, res) => {
         filter = { $and: queryConditions };
     }
 
-    const allListings = await Listing.find(filter);
+    // Cache-Aside for listing feed / search results
+    const cacheKey = `listings_feed:${category ? category.trim().toLowerCase() : "all"}:${search ? search.trim().toLowerCase() : "none"}`;
+    let allListings = await cacheService.get(cacheKey);
+
+    if (!allListings) {
+        allListings = await Listing.find(filter);
+        if (allListings) {
+            // Cache feed for 5 minutes (300s) with automatic TTL jitter
+            await cacheService.set(cacheKey, allListings, 300);
+        }
+    }
+
     res.render("listings/index.ejs", { 
         allListings, 
         currentCategory: category || "", 
@@ -100,20 +112,41 @@ module.exports.createListing = async (req, res) => {
     }
 
     await newListing.save();
+
+    // Invalidate listings feed and AI semantic search vector cache
+    await Promise.all([
+        cacheService.delPattern("listings_feed:*"),
+        cacheService.del("ai:listing_embeddings")
+    ]);
+
     res.redirect("/listings");
 };
 
 module.exports.showListing = async (req, res) => {
     const { id } = req.params;
+    const cacheKey = `listing:${id}`;
 
-    const listing = await Listing.findById(id)
-        .populate({
-            path: "reviews",
-            populate: {
-                path: "author"
-            }
-        })
-        .populate("owner");
+    // Cache-Aside: check cache first
+    let listing = await cacheService.get(cacheKey);
+
+    if (listing) {
+        listing = cacheService.rehydrateListing(listing);
+    } else {
+        // Cache miss: fetch populated document from MongoDB
+        listing = await Listing.findById(id)
+            .populate({
+                path: "reviews",
+                populate: {
+                    path: "author"
+                }
+            })
+            .populate("owner");
+
+        if (listing) {
+            // Cache single listing for 1 hour (3600s with jitter)
+            await cacheService.set(cacheKey, listing, 3600);
+        }
+    }
 
     if (!listing) {
         throw new ExpressError(404, "Listing not found");
@@ -189,6 +222,13 @@ module.exports.updateListing = async (req, res) => {
         console.error("Embedding generation error on update:", embErr.message);
     }
 
+    // Invalidate single listing, feeds, and AI vector cache
+    await Promise.all([
+        cacheService.del(`listing:${id}`),
+        cacheService.delPattern("listings_feed:*"),
+        cacheService.del("ai:listing_embeddings")
+    ]);
+
     res.redirect(`/listings/${id}`);
 };
 
@@ -200,6 +240,13 @@ module.exports.destroyListing = async (req, res) => {
     if (!listing) {
         throw new ExpressError(404, "Listing not found");
     }
+
+    // Invalidate single listing, feeds, and AI vector cache
+    await Promise.all([
+        cacheService.del(`listing:${id}`),
+        cacheService.delPattern("listings_feed:*"),
+        cacheService.del("ai:listing_embeddings")
+    ]);
 
     res.redirect("/listings");
 };

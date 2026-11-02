@@ -4,8 +4,9 @@ const Listing = require("./models/listing.js");
 const Review = require("./models/review.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
+const cacheService = require("./services/cacheService.js");
 
-// Extract user from JWT token and attach to req.user and res.locals.currentUser
+// Extract user from JWT token and attach to req.user and res.locals.currentUser (with Cache-Aside)
 const attachCurrentUser = async (req, res, next) => {
     const token = req.cookies ? req.cookies.token : null;
 
@@ -17,7 +18,21 @@ const attachCurrentUser = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.userId).select("-password");
+        const cacheKey = `user:${decoded.userId}`;
+
+        // 1. Check cache first
+        let user = await cacheService.get(cacheKey);
+
+        if (user) {
+            user = cacheService.rehydrateUser(user);
+        } else {
+            // 2. Cache miss: fetch from MongoDB
+            user = await User.findById(decoded.userId).select("-password");
+            if (user) {
+                // 3. Populate cache (TTL: 10 mins with jitter)
+                await cacheService.set(cacheKey, user, 600);
+            }
+        }
 
         if (user) {
             req.user = user;

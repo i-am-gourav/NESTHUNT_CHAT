@@ -10,6 +10,10 @@ const cookieParser = require("cookie-parser");
 
 const ExpressError = require("./utils/ExpressError.js");
 const { attachCurrentUser } = require("./middleware.js");
+const { initRedis } = require("./services/cacheService.js");
+
+// Initialize Redis Cache Client
+initRedis();
 
 // Import Routers
 const listingRouter = require("./routes/listings.js");
@@ -40,7 +44,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "/public")));
+// Serve static files with HTTP cache headers (7 days in production, 1 hour in dev)
+app.use(express.static(path.join(__dirname, "/public"), {
+    maxAge: process.env.NODE_ENV === "production" ? "7d" : "1h",
+    etag: true
+}));
 
 // Attach user to req.user and res.locals.currentUser on every request
 app.use(attachCurrentUser);

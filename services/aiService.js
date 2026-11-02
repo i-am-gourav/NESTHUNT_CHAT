@@ -1,5 +1,6 @@
 const Groq = require("groq-sdk");
 const Listing = require("../models/listing.js");
+const cacheService = require("./cacheService.js");
 const { 
     generateEmbedding, 
     rankListingsBySimilarity, 
@@ -61,11 +62,21 @@ async function generateChatResponse({ message, history = [] }) {
             console.error("Query embedding generation error:", embErr.message);
         }
 
-        // 2. Retrieve listings with embeddings and apply Hybrid Search
+        // 2. Retrieve listings with embeddings and apply Hybrid Search (with Cache-Aside)
         try {
-            const allEmbeddings = await Listing.find({
-                embedding: { $exists: true, $ne: [] }
-            }).select("title description category price location country image embedding");
+            const cacheKey = "ai:listing_embeddings";
+            let allEmbeddings = await cacheService.get(cacheKey);
+
+            if (!allEmbeddings || !Array.isArray(allEmbeddings) || allEmbeddings.length === 0) {
+                allEmbeddings = await Listing.find({
+                    embedding: { $exists: true, $ne: [] }
+                }).select("title description category price location country image embedding");
+
+                if (allEmbeddings && allEmbeddings.length > 0) {
+                    // Cache listings and dense embeddings for 24 hours (86400s with jitter)
+                    await cacheService.set(cacheKey, allEmbeddings, 86400);
+                }
+            }
 
             topListings = rankListingsBySimilarity(trimmedMsg, queryVec, allEmbeddings, 4);
 

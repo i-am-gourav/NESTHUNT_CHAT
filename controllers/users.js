@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.js");
+const cacheService = require("../services/cacheService.js");
 
 module.exports.renderSignup = (req, res) => {
     if (req.user) {
@@ -133,7 +134,10 @@ module.exports.login = async (req, res) => {
     res.redirect("/listings");
 };
 
-module.exports.logout = (req, res) => {
+module.exports.logout = async (req, res) => {
+    if (req.user && req.user._id) {
+        await cacheService.del(`user:${req.user._id}`);
+    }
     res.clearCookie("token");
     res.redirect("/listings");
 };
