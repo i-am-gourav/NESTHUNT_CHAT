@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Listing = require("../models/listing.js");
 const { generateEmbedding, buildListingDocument } = require("../services/embeddingService.js");
 
-const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/NESTHUNT";
+const MONGO_URL = process.env.ATLASDB_URL || process.env.MONGO_URL || "mongodb://127.0.0.1:27017/NESTHUNT";
 
 async function run() {
     try {

@@ -5,6 +5,7 @@ const data = require("./data.js");
 const Listing = require("../models/listing.js");
 const User = require("../models/user.js");
 const Review = require("../models/review.js");
+const { generateEmbedding, buildListingDocument } = require("../services/embeddingService.js");
 
 const MONGO_URL = process.env.ATLASDB_URL || process.env.MONGO_URL || "mongodb://127.0.0.1:27017/NESTHUNT";
 
@@ -118,6 +119,14 @@ const initDB = async () => {
             reviews: []
         });
 
+        // Compute dense 384-dimensional vector embedding for AI Concierge search
+        try {
+            const docText = buildListingDocument(newListing);
+            newListing.embedding = await generateEmbedding(docText);
+        } catch (embErr) {
+            console.warn(`Could not generate embedding for "${newListing.title}":`, embErr.message);
+        }
+
         await newListing.save();
 
         // Attach 2 good reviews per listing from different reviewers
@@ -145,6 +154,8 @@ const initDB = async () => {
 
         newListing.reviews.push(rev1._id, rev2._id);
         await newListing.save();
+
+        console.log(`[${i + 1}/${data.data.length}] Seeded: "${newListing.title}" (${newListing.location}, ${newListing.country})`);
     }
 
     console.log(`Database seeded with ${data.data.length} listings and authentic reviews!`);

@@ -1,5 +1,260 @@
 const sampleListings = [
   {
+    title: "The Cliffside Bohemian Villa with Private Plunge Pool",
+    description:
+      "Perched atop the red cliffs of North Goa overlooking Vagator beach and the Arabian Sea. This sunlit bohemian villa features an infinity plunge pool, open-air sun deck, vibrant tropical garden, and direct access to Ozran beach. Minutes away from famous beach clubs, flea markets, and coastal cafes. Ideal for sunset lovers, creative retreats, and beach vacations.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 4200,
+    location: "Vagator, Goa",
+    country: "India",
+    category: "Beachfront",
+    geometry: {
+      type: "Point",
+      coordinates: [73.7439, 15.5898]
+    }
+  },
+  {
+    title: "Royal Heritage Haveli Suite on Lake Pichola",
+    description:
+      "Immerse yourself in Rajasthani royalty at this 18th-century restored palace haveli in Udaipur. Featuring handcrafted jharokhas, traditional Mewari frescoes, marble courtyard fountains, and private rooftop dining with unobstructed views of the City Palace and Lake Pichola. Enjoy candlelit dinners, cultural folk dance performances, and serene boat cruises.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 5500,
+    location: "Udaipur, Rajasthan",
+    country: "India",
+    category: "Castles",
+    geometry: {
+      type: "Point",
+      coordinates: [73.6800, 24.5760]
+    }
+  },
+  {
+    title: "Panoramic Cedar Treehouse in Old Manali Pine Forest",
+    description:
+      "Nestled high up in an apple orchard and deodar pine forest in Old Manali. This handcrafted wooden treehouse boasts floor-to-ceiling glass windows framing snow-capped Himalayan peaks and the Rohtang pass horizon. Features a stone fireplace, private balcony hammock, radiant wooden interiors, and stargazing skylights. Wake up to fresh mountain air, birdsong, and trekking trails right at your doorstep.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 2800,
+    location: "Old Manali, Himachal Pradesh",
+    country: "India",
+    category: "Mountains",
+    geometry: {
+      type: "Point",
+      coordinates: [77.1892, 32.2396]
+    }
+  },
+  {
+    title: "Misty Cloud Heritage Tea Estate Cottage",
+    description:
+      "Surrounded by rolling emerald tea plantations and misty valleys in Munnar, Kerala. A colonial-style stone cottage featuring a cozy British fireplace, plantation-view verandas, and tea tasting tours. Hike through aromatic cardamom hills, spot endemic birds at Eravikulam National Park, and sip freshly brewed single-estate tea in tranquil isolation.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 3100,
+    location: "Munnar, Kerala",
+    country: "India",
+    category: "Farms",
+    geometry: {
+      type: "Point",
+      coordinates: [77.0595, 10.0889]
+    }
+  },
+  {
+    title: "Alleppey Backwater Luxury Houseboat with Private Chef",
+    description:
+      "Cruise the tranquil palm-fringed canals of Alleppey on a handcrafted eco-friendly bamboo and teakwood houseboat (Kettuvallam). Includes a personal captain and dedicated private chef serving authentic Karimeen Pollichathu, Kerala sadhya, and coconut curries. Features sun loungers, air-conditioned master staterooms, and sunset views over Vembanad Lake.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 6800,
+    location: "Alleppey, Kerala",
+    country: "India",
+    category: "Boats",
+    geometry: {
+      type: "Point",
+      coordinates: [76.3388, 9.4981]
+    }
+  },
+  {
+    title: "The Ganges Glass Sanctuary - Yoga & Meditation Retreat",
+    description:
+      "Situated right along the holy turquoise waters of the sacred Ganges in Rishikesh. This peaceful sanctuary offers private river access, daily morning yoga pavilions, an Ayurvedic herbal garden, and evening views of the Parmarth Niketan Ganga Aarti. Perfect for spiritual seekers, writers, digital nomads, and mindfulness practitioners looking to recharge amidst the Himalayan foothills.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 1950,
+    location: "Rishikesh, Uttarakhand",
+    country: "India",
+    category: "Rooms",
+    geometry: {
+      type: "Point",
+      coordinates: [78.3248, 30.0869]
+    }
+  },
+  {
+    title: "Royal Maharaja Stargazing Tent in Sam Sand Dunes",
+    description:
+      "Experience the magic of the Golden City under a thousand stars in the heart of the Thar Desert. Luxury Swiss glamping tents equipped with carved sheesham wood furnishings, attached marble baths, and private verandahs. Includes sunset camel safaris across golden dunes, live Kalbelia folk performances around a crackling bonfire, and traditional Rajasthani thali dinners.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 2600,
+    location: "Jaisalmer, Rajasthan",
+    country: "India",
+    category: "Camping",
+    geometry: {
+      type: "Point",
+      coordinates: [70.5186, 26.8282]
+    }
+  },
+  {
+    title: "Whispering Pines Coffee & Pepper Estate Villa",
+    description:
+      "Tucked inside a sprawling 40-acre private coffee and spice plantation in Madikeri, Coorg. Wake up to the rich aroma of blooming Robusta coffee blossoms, misty mountain slopes, and cascading natural stream pools. Features vintage Kodava architecture, evening barbecue bonfires, plantation guided walks, and home-cooked pandi curry and akki roti.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 3400,
+    location: "Coorg, Karnataka",
+    country: "India",
+    category: "Farms",
+    geometry: {
+      type: "Point",
+      coordinates: [75.7382, 12.4244]
+    }
+  },
+  {
+    title: "Maison Jaune - 19th Century French Colonial Townhouse",
+    description:
+      "Located on Rue Suffren in the heart of Pondicherry's historic French Quarter (White Town). With bright mustard-yellow stucco walls, arched shuttered windows, high ceilings, antique teakwood four-poster beds, and an internal leafy bougainvillea courtyard. Stroll 2 minutes to the seaside Promenade Beach, Aurobindo Ashram, and artisanal French bakeries.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 3800,
+    location: "Pondicherry, Tamil Nadu",
+    country: "India",
+    category: "Iconic Cities",
+    geometry: {
+      type: "Point",
+      coordinates: [79.8359, 11.9338]
+    }
+  },
+  {
+    title: "Varkala Cliffside Ocean Oasis with Infinity Pool",
+    description:
+      "Dramatic 180-degree ocean views perched directly on the famed Varkala North Cliff. Listen to the rhythmic waves of Papanasam beach right from your private terrace infinity pool. Step down the cliff pathway to organic cafes, yoga centers, and surf schools. Unrivaled panoramic sunsets every evening.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 3200,
+    location: "Varkala, Kerala",
+    country: "India",
+    category: "Amazing Pools",
+    geometry: {
+      type: "Point",
+      coordinates: [76.7163, 8.7379]
+    }
+  },
+  {
+    title: "Cosmic Geodesic Glamping Dome under the Milky Way",
+    description:
+      "A luxury geodesic sky dome perched at 7,500 feet overlooking the Pir Panjal range in Sethan, Hampta Valley. Features a transparent panoramic ceiling allowing you to sleep directly under crystal-clear Himalayan starry night skies. Equipped with indoor heating, plush goose-down duvets, stargazing telescope, and warm hot cocoa.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 4100,
+    location: "Sethan Valley, Himachal Pradesh",
+    country: "India",
+    category: "Domes",
+    geometry: {
+      type: "Point",
+      coordinates: [77.2345, 32.2215]
+    }
+  },
+  {
+    title: "Silk Route Luxury Yurt in Nubra Valley Dunes",
+    description:
+      "Nestled between the rugged Karakoram and Ladakh mountain ranges near the Shyok River in Hunder. Surrounded by dramatic white sand dunes home to rare double-humped Bactrian camels. Handcrafted Mongolian-style heated luxury yurts with handwoven Ladakhi rugs, solar warming, and panoramic glacier views. Truly a once-in-a-lifetime high altitude adventure.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 4900,
+    location: "Nubra Valley, Ladakh",
+    country: "India",
+    category: "Arctic",
+    geometry: {
+      type: "Point",
+      coordinates: [77.5771, 34.1526]
+    }
+  },
+  {
+    title: "Amer Heritage Fortress Palace with Peacocks & Fountains",
+    description:
+      "Located in the shadow of the majestic Amber Fort in Jaipur. Built with pink Dholpur sandstone, hand-carved jali stone lattice screens, step-well courtyards, and tranquil swimming pools where wild peacocks roam. Experience royal Rajput hospitality, traditional block-printing workshops, and easy access to the Pink City bazaars.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1599661046827-dacff0c0f09a?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 4800,
+    location: "Jaipur, Rajasthan",
+    country: "India",
+    category: "Castles",
+    geometry: {
+      type: "Point",
+      coordinates: [75.8507, 26.9855]
+    }
+  },
+  {
+    title: "Vintage Indo-Portuguese Villa in South Goa Coconut Palms",
+    description:
+      "Step back in time at this 120-year-old preserved Indo-Portuguese villa in quiet Benaulim, South Goa. Features red terracotta roofs, mother-of-pearl window shutters, antique rocking chairs, and an outdoor rain shower enclosed in banana groves. Just a 5-minute bicycle ride through paddy fields to white sand beaches.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 2400,
+    location: "Benaulim, South Goa",
+    country: "India",
+    category: "Trending",
+    geometry: {
+      type: "Point",
+      coordinates: [73.9297, 15.2608]
+    }
+  },
+  {
+    title: "Sea-Facing Bandra Designer Penthouse with Skyline Terrace",
+    description:
+      "Soak in breathtaking Arabian Sea sunsets and the Mumbai skyline from this ultra-modern designer duplex penthouse on Carter Road, Bandra. Features double-height floor-to-ceiling glass walls, wrap-around private terrace, state-of-the-art chef's kitchen, and curated modern art. Minutes from Mumbai's hottest celebrity restaurants, bars, and cafes.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 8500,
+    location: "Mumbai, Maharashtra",
+    country: "India",
+    category: "Iconic Cities",
+    geometry: {
+      type: "Point",
+      coordinates: [72.8258, 19.0596]
+    }
+  },
+  {
     title: "Cozy Beachfront Cottage",
     description:
       "Escape to this charming beachfront cottage for a relaxing getaway. Enjoy stunning ocean views and easy access to the beach.",
